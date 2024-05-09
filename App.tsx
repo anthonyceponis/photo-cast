@@ -1,11 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Nav } from "./components/nav";
+import { Footer } from "./components/footer";
+import { Map } from "./components/map";
+import { SideNav } from "./components/sidenav";
 
 export default function App() {
     return (
-        <View className="flex-1 items-center justify-center bg-orange-500">
-            <Text>Open up App.js to start working on your app!</Text>
-            <StatusBar style="auto" />
+        <View className="flex-1 items-center justify-center bg-white">
+            <Nav />
+            <SideNav />
+            <Map />
+            <Footer />
         </View>
     );
 }
