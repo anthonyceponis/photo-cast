@@ -1,5 +1,9 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 export const SearchResults = () => {
-    return <View>This is a search result.</View>;
+    return (
+        <View>
+            <Text>This is a search result.</Text>
+        </View>
+    );
 };

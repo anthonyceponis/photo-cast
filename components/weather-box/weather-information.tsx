@@ -1,5 +1,9 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 export const WeatherInformation = () => {
-    return <View>This is weather information</View>;
+    return (
+        <View>
+            <Text>This is weather information</Text>
+        </View>
+    );
 };

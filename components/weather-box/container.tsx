@@ -1,5 +1,9 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 export const WeatherBox = () => {
-    return <View>This is the weather box</View>;
+    return (
+        <View>
+            <Text>This is the weather box</Text>
+        </View>
+    );
 };

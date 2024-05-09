@@ -1,5 +1,9 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 export const Map = () => {
-    return <View>This is a map</View>;
+    return (
+        <View>
+            <Text>This is a map</Text>
+        </View>
+    );
 };
