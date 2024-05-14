@@ -1,10 +1,11 @@
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 import { SideNav } from "./components/sidenav";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./Api";
+import { FadeInView, SlideInView, ISlidePositions } from "./components/squareDemo";
 
 export default function App() {
     // Create state variables for storing different weather information
@@ -16,6 +17,8 @@ export default function App() {
     const [Description, setDescription] = useState(null);
     const [Long, setLong] = useState(null);
     const [Lat, setLat] = useState(null);
+
+    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     // Call API for weather data
     useEffect(() => {
@@ -36,6 +39,30 @@ export default function App() {
             <SideNav />
             <Map />
             <Footer />
+            <FadeInView
+                style={{
+                width: 250,
+                height: 50,
+                backgroundColor: 'powderblue',
+                }}>
+                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
+                Fading in
+                </Text>
+            </FadeInView>
+            <Button title="SideNav" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)} } />
+            <SlideInView
+                style={{
+                width: 250,
+                height: 50,
+                backgroundColor: 'powderblue',
+                }} 
+                positions={{startX: 250, startY: -250, endX: -250, endY: 250}}
+                prompt={isSideNavOpen}
+                >
+                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
+                Fading in
+                </Text>
+            </SlideInView>
 
             <Text>Location name: {Name} </Text>
             <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
