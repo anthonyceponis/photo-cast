@@ -46,7 +46,6 @@ export default function App() {
         </View>
     );
 }
-
 /* searching via city name 
 https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 API key: 0267fb2bce1e8cc555d0e5621963f2a8
