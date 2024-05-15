@@ -1,18 +1,11 @@
 import { ActivityIndicatorBase, Text, View} from "react-native";
-import { Nav } from "./components/nav";
-import { Footer } from "./components/footer";
-import { Map } from "./components/map";
+import { Nav } from "../components/nav";
+import { Footer } from "../components/footer";
+import { Map } from "../components/map";
 import React, {useEffect, useState} from 'react';
-import * as currentWeather from "./Api";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
-import { TipsScreen } from "./screens/Tips";
-import { SettingsScreen } from "./screens/Settings";
-import { FavouritesScreen } from "./screens/Favourites";
+import * as currentWeather from "../Api";
 
-const Drawer = createDrawerNavigator();
-
-export function HomeScreen() {
+export function HomeScreen2() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
     // to add more info from API
@@ -38,7 +31,6 @@ export function HomeScreen() {
     return (
         <View className="flex-1 items-center justify-center bg-white">
             <Nav />
-            <SideNav />
             <Map />
             <Footer />
 
@@ -49,20 +41,5 @@ export function HomeScreen() {
             <Text>Location Longitude: {Long} </Text>
 
         </View>
-        
     );
 };
-
-
-export default function App() {
-    return (
-        <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={HomeScreen} />
-                <Drawer.Screen name="Tips" component={TipsScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="Favourites" component={FavouritesScreen} />
-            </Drawer.Navigator>
-        </NavigationContainer>
-    );
-}
