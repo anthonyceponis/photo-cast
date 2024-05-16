@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import { ActivityIndicatorBase, Text, View} from "react-native";
 import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
-import { SideNav } from "./components/sidenav";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./scripts/api";
 import moment from 'moment';
 
 import { pptime } from "./scripts/calculations";
+import { NavigationContainer } from "@react-navigation/native";
+import { SideNav } from "./components/sidenav";
 
-export default function App() {
+export function HomeScreen() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
     // to add more info from API
@@ -48,12 +49,10 @@ export default function App() {
     return (
         <View className="flex-1 items-center justify-center bg-white">
             <Nav />
-            
-            <SideNav />
             <Map />
             <Footer />
 
-            <Text>Location name: {Name} </Text>
+            <Text>Location: {Name} </Text>
             <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
             <Text>Location Description: {Description} </Text>
             <Text>Location Latitude: {Lat} </Text>
@@ -67,8 +66,11 @@ export default function App() {
         </View>
         
     );
+};
+
+
+export default function App() {
+    return (
+        <SideNav />
+    );
 }
-/* searching via city name 
-https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-API key: 0267fb2bce1e8cc555d0e5621963f2a8
-*/
