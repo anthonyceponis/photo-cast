@@ -3,10 +3,10 @@ import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 import { SideNav } from "./components/sidenav";
+import { WeatherContainer } from "./components/weather-box/container";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./Api";
 import { FadeInView, SlideInView, ISlidePositions } from "./components/squareDemo";
-
 export default function App() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
@@ -38,6 +38,7 @@ export default function App() {
             <Nav />
             <SideNav />
             <Map />
+            <WeatherContainer />
             <Footer />
             <FadeInView
                 style={{
@@ -73,7 +74,3 @@ export default function App() {
         </View>
     );
 }
-/* searching via city name 
-https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-API key: 0267fb2bce1e8cc555d0e5621963f2a8
-*/
