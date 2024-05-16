@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Switch, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Switch, TextInput, Button, StyleSheet, ImageBackground, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export function sendTestNotification(city) {
+    // Code to send test notification
+    Alert.alert('️🌤️Weather Notification🌤️', `Current city: ${city}`);
+  };
 
 export function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [homeAddress, setHomeAddress] = useState('');
+  const [DefaultCity, setDefaultCity] = useState('');
 
   useEffect(() => {
     loadSettings();
@@ -15,9 +20,9 @@ export function SettingsScreen() {
       const notificationsSetting = await AsyncStorage.getItem('notificationsEnabled');
       setNotificationsEnabled(notificationsSetting === 'true');
 
-      const storedHomeAddress = await AsyncStorage.getItem('homeAddress');
-      if (storedHomeAddress !== null) {
-        setHomeAddress(storedHomeAddress);
+      const storedDefaultCity = await AsyncStorage.getItem('defaultCity');
+      if (storedDefaultCity !== null) {
+        setDefaultCity(storedDefaultCity);
       }
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -27,18 +32,24 @@ export function SettingsScreen() {
   const saveSettings = async () => {
     try {
       await AsyncStorage.setItem('notificationsEnabled', notificationsEnabled.toString());
-      await AsyncStorage.setItem('homeAddress', homeAddress);
+      await AsyncStorage.setItem('defaultCity', DefaultCity);
     } catch (error) {
       console.error('Error saving settings:', error);
     }
   };
 
   const toggleNotifications = () => {
-    setNotificationsEnabled(previousState => !previousState);
+    setNotificationsEnabled(previousState => {
+      if (!previousState) {
+        sendTestNotification(DefaultCity);
+      }
+      return !previousState;
+    });
   };
 
+
   const handleAddressChange = (address) => {
-    setHomeAddress(address);
+    setDefaultCity(address);
   };
 
   const handleSaveSettings = () => {
@@ -61,8 +72,8 @@ export function SettingsScreen() {
           <Text style={styles.sectionHeader}>Default City</Text>
           <TextInput
             style={styles.input}
-            value={homeAddress}
-            placeholder="Enter default city"
+            value={DefaultCity}
+            placeholder="Enter default address"
             onChangeText={handleAddressChange}
           />
 
@@ -87,7 +98,7 @@ const styles = StyleSheet.create({
     blurRadius: 0,
   },
   settingsContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.8)',
     padding: 20,
     borderRadius: 10,
     width: '80%',
