@@ -38,19 +38,46 @@ export default function App() {
             <Nav />
             <SideNav />
             <Map />
-            <WeatherContainer />
+
+            <SlideInView
+                    style={{zIndex: 2}}
+                    positions={{startX: 175, startY: -350, endX: -175, endY: -350}} 
+                    prompt={isSideNavOpen}
+                >
+                <Button title="Search" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)} } />
+            </SlideInView>
+
+            <SlideInView 
+                style = {{
+                    paddingVertical: 0,
+                    paddingHorizontal: 0,
+                    transform: [{translateX: 800}, {translateY: 0}],
+                    zIndex: 1,
+                    flexGrow: 0,
+                    position: "absolute"
+                }} 
+                positions={{startX: 800, startY: 0, endX: 0, endY: 0}} 
+                prompt={isSideNavOpen}
+            >
+                <WeatherContainer/>
+            </SlideInView>
+            
             <Footer />
-            <FadeInView
-                style={{
-                width: 250,
-                height: 50,
-                backgroundColor: 'powderblue',
-                }}>
-                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
-                Fading in
-                </Text>
-            </FadeInView>
-            <Button title="SideNav" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)} } />
+            
+            
+            
+
+            <Text>Location name: {Name} </Text>
+            <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
+            <Text>Location Description: {Description} </Text>
+            <Text>Location Latitude: {Lat} </Text>
+            <Text>Location Longitude: {Long} </Text>
+
+        </View>
+    );
+}
+
+/*
             <SlideInView
                 style={{
                 width: 250,
@@ -65,12 +92,14 @@ export default function App() {
                 </Text>
             </SlideInView>
 
-            <Text>Location name: {Name} </Text>
-            <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
-            <Text>Location Description: {Description} </Text>
-            <Text>Location Latitude: {Lat} </Text>
-            <Text>Location Longitude: {Long} </Text>
-
-        </View>
-    );
-}
+            <FadeInView
+                style={{
+                width: 250,
+                height: 50,
+                backgroundColor: 'powderblue',
+                }}>
+                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
+                Fading in
+                </Text>
+            </FadeInView>
+            */

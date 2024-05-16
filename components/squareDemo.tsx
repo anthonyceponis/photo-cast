@@ -112,17 +112,17 @@ export const SlideInView: React.FC<SlideInViewProps> = props => {
 
     Animated.timing(slideAnimX, {
         toValue: props.positions.endX,
-        duration: 5000,
+        duration: 1000,
         useNativeDriver: true,
       }).start()
       Animated.timing(slideAnimY, {
         toValue: props.positions.endY,
-        duration: 5000,
+        duration: 1000,
         useNativeDriver: true,
     }).start();
     //Kick off the first step of the animation towards the new target, thus updating slideAnimX and slideAnimY
     //This will cause the useEffects above to call and these will recursively call as these update the slideAnim variables
-    //Which then tiger themselves again etc... Until they no longer change => reached their end position.
+    //Which then trigger themselves again etc... Until they no longer change => reached their end position.
 
     console.log(props.positions.endX);
   }, [props.prompt])
