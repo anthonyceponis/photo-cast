@@ -1,0 +1,41 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const storeObj = async (key:string, value:any) => 
+{
+    try
+    {
+        const jsonVal = JSON.stringify(value);
+        await AsyncStorage.setItem(key, jsonVal);
+    }
+    catch (e)
+    {
+        console.error("Cannot store KV pair (" + key + "," + value + "): " + e);
+    }
+}
+
+const getObj = async (key:string) => 
+{
+    try
+    {
+        const jsonVal = await AsyncStorage.getItem(key);
+        return jsonVal != null ? JSON.parse(jsonVal) : null
+    }
+    catch (e)
+    {
+        console.error("Could not retrieve item at key " + key + ": " + e);
+        return null;
+    }
+}
+
+export async function getFavourites() : Promise<Set<string>>
+{
+    const favourites = await getObj("favourites");
+    return favourites != null ? favourites : new Set<string>();
+}
+
+export async function storeFavourite(favourite:string)
+{
+    let currentFavourites = await getFavourites();
+    currentFavourites.add(favourite);
+    storeObj("favourites", currentFavourites);
+}
