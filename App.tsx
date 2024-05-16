@@ -15,9 +15,9 @@ export function HomeScreen() {
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
     // to add more info from API
 
-    const [Name, setName] = useState(null);
-    const [Temperature, setTemperature] = useState(null);
-    const [Description, setDescription] = useState(null);
+    const [Name, setName] = useState<null | string>();
+    const [Temperature, setTemperature] = useState<null | string>(null);
+    const [Description, setDescription] = useState<null | string>(null);
     const [Long, setLong] = useState(0);
     const [Lat, setLat] = useState(0);
     const [sunriseTime, setSunriseTime] = useState(0);
@@ -30,15 +30,15 @@ export function HomeScreen() {
     useEffect(() => {
         const fetchData = async () => {
             const data = await currentWeather.getWeatherInfoByName('london');
-            setName(data.name);
-            setTemperature(data.temperature);
-            setDescription(data.description);
-            setLong(data.long);
-            setLat(data.lat);
-            setSunriseTime(data.sunriseTime);
-            setMorningGHend(data.morningGHend);
-            setEveningGHstart(data.eveningGHstart);
-            setSunsetTime(data.sunsetTime);
+            setName(data[0].name);
+            setTemperature(data[0].temperature);
+            setDescription(data[0].description);
+            setLong(data[0].long);
+            setLat(data[0].lat);
+            setSunriseTime(data[0].sunriseTime);
+            setMorningGHend(data[0].morningGHend);
+            setEveningGHstart(data[0].eveningGHstart);
+            setSunsetTime(data[0].sunsetTime);
         };
         fetchData();
     }, []);
