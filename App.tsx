@@ -33,11 +33,10 @@ export function HomeScreen() {
     return (
         <View className="flex-1 items-center justify-center bg-white">
             <Nav />
-            <SideNav />
             <Map />
             <Footer />
 
-            <Text>Location name: {Name} </Text>
+            <Text>Location: {Name} </Text>
             <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
             <Text>Location Description: {Description} </Text>
             <Text>Location Latitude: {Lat} </Text>
@@ -51,8 +50,6 @@ export function HomeScreen() {
 
 export default function App() {
     return (
-        <NavigationContainer>
-            <SideNav />
-        </NavigationContainer>
+        <SideNav />
     );
 }
