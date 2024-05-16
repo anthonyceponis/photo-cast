@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./scripts/api";
-
 import { getZenithTime, getSunriseTime, getSunsetTime, pptime, goldenHourZenithAngle } from "./scripts/calculations";
 import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
@@ -37,6 +36,8 @@ export function HomeScreen() {
             setDescription(await currentWeather.getWeatherInfoByName('london').description);
             setLong(await currentWeather.getWeatherInfoByName('london').long);
             setLat(await currentWeather.getWeatherInfoByName('london').lat);
+
+            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
         };
         fetchData();
     }, []);

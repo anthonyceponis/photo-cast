@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {Animated, Text, View, Image} from 'react-native';
+import {Animated, Text, View, Image, Button} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {ViewStyle, TransformsStyle} from 'react-native';
 
@@ -143,9 +143,9 @@ export const SlideInView: React.FC<SlideInViewProps> = props => {
   //is called a view.
 };
 
-type ChangingTextProps = PropsWithChildren<{style: ViewStyle, startText:string, endText:string, prompt: boolean}>;
+type ChangingTextProps = PropsWithChildren<{startText:string, endText:string, prompt: boolean, action:Function}>;
 
-export const ChangingTextProps: React.FC<ChangingTextProps> = props => { 
+export const ChangingTextButton: React.FC<ChangingTextProps> = props => { 
   const [curText, setText] = useState(props.startText);
   useEffect(()=>
     {
@@ -158,6 +158,6 @@ export const ChangingTextProps: React.FC<ChangingTextProps> = props => {
     }
   ), [props.prompt]
   return(
-    <Text style={{...props.style}}>curText</Text>
+    <Button title = {curText} onPress={() => props.action}></Button>
   );
 }
