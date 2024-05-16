@@ -56,7 +56,7 @@ export function HomeScreen() {
 
             <SlideInView
                     style={{zIndex: 2}}
-                    positions={{startX: 175, startY: -325, endX: -175, endY: -325}} 
+                    positions={{startX: 175, startY: -325, endX: 300, endY: -325}} 
                     prompt={isSideNavOpen}
                 >
                 <Button title = "search" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)}}/> 
@@ -77,12 +77,10 @@ export function HomeScreen() {
                 <Pressable onPress={() => setWeatherBoxOpen(true)}>
                 <FontAwesomeIcon icon={faSearch} />
             </Pressable>
-            {weatherBoxOpen ? (
+
                 <WeatherContainer
-                    isOpen={weatherBoxOpen}
-                    setIsOpen={setWeatherBoxOpen}
+                    setIsOpen={setIsSideNavOpen}
                 />
-            ) : null}
 
             </SlideInView>
             

@@ -47,11 +47,10 @@ const ListItem = ({ item }: { item: string }) => {
 };
 
 interface IProps {
-    isOpen: boolean;
     setIsOpen: React.Dispatch<boolean>;
 }
 
-export const WeatherContainer: React.FC<IProps> = ({ isOpen, setIsOpen }) => {
+export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
     const windowWidth = Dimensions.get("window").width;
     const [searchMethod, setSearchMethod] = useState<SearchMethods>(
         SearchMethods.Location
