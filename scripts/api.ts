@@ -1,36 +1,46 @@
 import axios from 'axios';
+import moment from 'moment';
+import { getZenithTime, getSunriseTime, getSunsetTime, goldenHourZenithAngle, blueHourZenithAngle } from "./calculations";
 
 // API key, city name and url for fetching weather data based
 const apiKey = '0267fb2bce1e8cc555d0e5621963f2a8'
 
-export function getWeatherInfoByName(city:string)
+export async function getWeatherInfoByName(city:string)
 {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+  return getWeatherInfo(url);
+}
+
+async function getWeatherInfo(url:string)
+{
+  const date = moment();
+  const timezone = date.utcOffset()/60;
+
+  const long = await fetchLong(url);
+  const lat = await fetchLat(url);
+
   return {
-    name:fetchName(url),
-    temperature:fetchTemperature(url),
-    description:fetchDescription(url),
-    long:fetchLong(url),
-    lat:fetchLat(url),
-    mainDesc:fetchMainDescription(url),
-    pressure:fetchPressure(url),
-    cloudCoverage:fetchCloudCoverage(url)
+    name:await fetchName(url),
+    temperature:await fetchTemperature(url),
+    description:await fetchDescription(url),
+    long:long,
+    lat:lat,
+    mainDesc:await fetchMainDescription(url),
+    pressure:await fetchPressure(url),
+    cloudCoverage:await fetchCloudCoverage(url),
+    sunriseTime:timezone+getSunriseTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat),
+    morningGHend:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, goldenHourZenithAngle, true),
+    eveningGHstart:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, goldenHourZenithAngle, false),
+    sunsetTime:timezone+getSunsetTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat),
+    morningBHstart:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, blueHourZenithAngle, true),
+    eveningBHend:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, blueHourZenithAngle, false),
   };
 }
 
 export function getWeatherInfoByLoc(long:number, lat:number)
 {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}`;
-  return {
-    name:fetchName(url),
-    temperature:fetchTemperature(url),
-    description:fetchDescription(url),
-    long:fetchLong(url),
-    lat:fetchLat(url),
-    mainDesc:fetchMainDescription(url),
-    pressure:fetchPressure(url),
-    cloudCoverage:fetchCloudCoverage(url)
-  };
+  return getWeatherInfo(url);
 }
 
 // Current Functionality:
