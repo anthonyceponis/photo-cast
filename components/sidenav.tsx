@@ -12,9 +12,8 @@ export function SideNav() {
         <NavigationContainer>
             <Drawer.Navigator initialRouteName="Home"
         screenOptions={{
-            headerShown: true,
             drawerStyle: {
-                backgroundColor: "#",
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
                 width: 240
             },
             drawerLabelStyle: {
