@@ -4,7 +4,6 @@ import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./Api";
-import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
 
 export function HomeScreen() {
