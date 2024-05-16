@@ -50,7 +50,7 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <View className="absolute top-0 left-0 w-screen bg-black p-3">
+            <View className="absolute top-0 left-0 w-screen p-3">
             </View>
             <Map />
 
