@@ -3,6 +3,7 @@ import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 import { SideNav } from "./components/sidenav";
+import { WeatherContainer } from "./components/weather-box/container";
 
 export default function App() {
     return (
@@ -10,6 +11,7 @@ export default function App() {
             <Nav />
             <SideNav />
             <Map />
+            <WeatherContainer />
             <Footer />
         </View>
     );
