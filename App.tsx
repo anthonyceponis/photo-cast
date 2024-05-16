@@ -4,13 +4,8 @@ import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./Api";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { TipsScreen } from "./screens/Tips";
-import { SettingsScreen } from "./screens/Settings";
-import { FavouritesScreen } from "./screens/Favourites";
-
-const Drawer = createDrawerNavigator();
+import { SideNav } from "./components/sidenav";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -57,12 +52,7 @@ export function HomeScreen() {
 export default function App() {
     return (
         <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={HomeScreen} />
-                <Drawer.Screen name="Tips" component={TipsScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="Favourites" component={FavouritesScreen} />
-            </Drawer.Navigator>
+            <SideNav />
         </NavigationContainer>
     );
 }
