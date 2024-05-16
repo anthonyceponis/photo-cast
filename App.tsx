@@ -12,7 +12,7 @@ import * as currentWeather from "./scripts/api";
 import { getZenithTime, getSunriseTime, getSunsetTime, pptime, goldenHourZenithAngle } from "./scripts/calculations";
 import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
-import { FadeInView, SlideInView, ISlidePositions, ChangingTextButton } from "./components/squareDemo";
+import { FadeInView, SlideInView, ISlidePositions} from "./components/squareDemo";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -49,7 +49,7 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <View className="absolute top-0 left-0 w-screen bg-black p-3">
+            <View className="absolute top-0 left-0 w-screen p-3">
             </View>
             <Map />
 
@@ -106,29 +106,3 @@ export default function App() {
         <SideNav />
     );
 }
-/*
-            <SlideInView
-                style={{
-                width: 250,
-                height: 50,
-                backgroundColor: 'powderblue',
-                }} 
-                positions={{startX: 250, startY: -250, endX: -250, endY: 250}}
-                prompt={isSideNavOpen}
-                >
-                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
-                Fading in
-                </Text>
-            </SlideInView>
-
-            <FadeInView
-                style={{
-                width: 250,
-                height: 50,
-                backgroundColor: 'powderblue',
-                }}>
-                <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>
-                Fading in
-                </Text>
-            </FadeInView>
-            */
