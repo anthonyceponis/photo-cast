@@ -1,9 +1,12 @@
-import { ActivityIndicatorBase, Button, Text, View} from "react-native";
+import { Pressable, SafeAreaView, ActivityIndicatorBase, Button, Text, View} from "react-native";
 import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 
 import { WeatherContainer } from "./components/weather-box/container";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useState} from 'react';
 import * as currentWeather from "./scripts/api";
 
@@ -24,6 +27,7 @@ export function HomeScreen() {
     const [Lat, setLat] = useState(0);
 
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+    const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
 
     // Call API for weather data
     useEffect(() => {
@@ -70,7 +74,16 @@ export function HomeScreen() {
                 positions={{startX: 800, startY: 0, endX: 0, endY: 0}} 
                 prompt={isSideNavOpen}
             >
-                <WeatherContainer/>
+                <Pressable onPress={() => setWeatherBoxOpen(true)}>
+                <FontAwesomeIcon icon={faSearch} />
+            </Pressable>
+            {weatherBoxOpen ? (
+                <WeatherContainer
+                    isOpen={weatherBoxOpen}
+                    setIsOpen={setWeatherBoxOpen}
+                />
+            ) : null}
+
             </SlideInView>
             
             <Footer />

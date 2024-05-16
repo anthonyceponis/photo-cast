@@ -1,9 +1,10 @@
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useEffect, useState } from "react";
 import {
     Dimensions,
     FlatList,
-    ListRenderItem,
-    ListRenderItemInfo,
+    Pressable,
     Text,
     TextInput,
     View,
@@ -21,55 +22,145 @@ interface ICity {
     population_proper: String;
 }
 
+enum SearchMethods {
+    Location,
+    Condition,
+}
+
+const allWeatherConditions = [
+    "Morning blue hour",
+    "Evening blue hour",
+    "Sunrise",
+    "Sunset",
+    "Golden morning",
+    "Golden evening",
+    "Rainy",
+    "Cloudy",
+];
+
 const ListItem = ({ item }: { item: string }) => {
     return (
-        <View className="bg-white text-black p-3 border-b">
+        <Pressable className="bg-white text-black p-3 border-b border-gray-400">
             <Text>{item}</Text>
-        </View>
+        </Pressable>
     );
 };
 
-export const WeatherContainer = () => {
+interface IProps {
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<boolean>;
+}
+
+export const WeatherContainer: React.FC<IProps> = ({ isOpen, setIsOpen }) => {
     const windowWidth = Dimensions.get("window").width;
+    const [searchMethod, setSearchMethod] = useState<SearchMethods>(
+        SearchMethods.Location
+    );
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<string>("");
     const [cityList, setCityList] = useState(
         cityData.map((city: ICity) => city.city.toLowerCase())
     );
-    const [searchQuery, setSearchQuery] = useState("");
+    const [weatherConditionList, setWeatherConditionList] =
+        useState(allWeatherConditions);
 
     useEffect(() => {
-        setCityList(
-            cityData
-                .map((city: ICity) => city.city)
-                .filter((city: string) =>
-                    city.toLowerCase().includes(searchQuery.toLowerCase())
+        if (searchMethod === SearchMethods.Location) {
+            setCityList(
+                cityData
+                    .map((city: ICity) => city.city)
+                    .filter((city: string) =>
+                        city.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .sort()
+                // .slice(0, 10)
+            );
+        } else {
+            setWeatherConditionList(
+                allWeatherConditions.filter((condition) =>
+                    condition.includes(searchQuery)
                 )
-                .sort()
-        );
+            );
+        }
     }, [searchQuery]);
 
     return (
-        <View className="bg-black opacity-75 h-screen w-screen z-10">
+        <View className="h-screen w-screen bg-black opacity-75">
             <View
                 style={{ width: windowWidth - 20 }}
-                className={`bg-white rounded p-3 mx-auto mt-40`}
+                className="bg-white rounded mx-auto mt-24"
             >
-                <TextInput
-                    className="border rounded px-3 py-2 mb-5"
-                    placeholder="Enter location or weather condition"
-                    onChangeText={(value: string) => setSearchQuery(value)}
-                />
-                <View>
-                    {cityList.map((name: string) => {
-                        <View className="bg-white text-black">
-                            <Text>{name}</Text>
-                        </View>;
-                    })}
+                <View className="bg-white rounded p-3">
+                    <Pressable
+                        className="text-right flex-row justify-end"
+                        onPress={() => setIsOpen(false)}
+                    >
+                        <FontAwesomeIcon size={25} icon={faXmark} />
+                    </Pressable>
+                    <Text className="font-semibold mb-2">Search by...</Text>
+                    <View className="flex flex-row gap-3 mb-3">
+                        <Pressable
+                            className={`border rounded-full px-3 py-2 ${
+                                searchMethod === SearchMethods.Location
+                                    ? "bg-black"
+                                    : "bg-white"
+                            }`}
+                            onPress={() =>
+                                setSearchMethod(SearchMethods.Location)
+                            }
+                        >
+                            <Text
+                                className={`font-semibold ${
+                                    searchMethod === SearchMethods.Location
+                                        ? "text-white"
+                                        : "text-black"
+                                }`}
+                            >
+                                Location
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            className={`border rounded-full px-3 py-2 ${
+                                searchMethod === SearchMethods.Condition
+                                    ? "bg-black"
+                                    : "bg-white"
+                            }`}
+                            onPress={() =>
+                                setSearchMethod(SearchMethods.Condition)
+                            }
+                        >
+                            <Text
+                                className={`font-semibold ${
+                                    searchMethod === SearchMethods.Location
+                                        ? "text-black"
+                                        : "text-white"
+                                }`}
+                            >
+                                Condition
+                            </Text>
+                        </Pressable>
+                    </View>
+                    <TextInput
+                        className="border rounded px-3 py-2 mb-5 bg-white"
+                        placeholder="Enter location or weather condition"
+                        onChangeText={(value: string) => setSearchQuery(value)}
+                    />
+                    {searchMethod === SearchMethods.Location ? (
+                        <FlatList
+                            data={cityList}
+                            className="rounded max-h-96"
+                            renderItem={({ item }) => <ListItem item={item} />}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    ) : (
+                        <FlatList
+                            data={weatherConditionList}
+                            className="rounded max-h-52"
+                            renderItem={({ item }) => <ListItem item={item} />}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    )}
                 </View>
-                <FlatList
-                    data={cityList}
-                    renderItem={({ item }) => <ListItem item={item} />}
-                    keyExtractor={(item, index) => index.toString()}
-                />
             </View>
         </View>
     );
