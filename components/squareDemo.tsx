@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, Text, View, Image} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {ViewStyle, TransformsStyle} from 'react-native';
@@ -142,3 +142,22 @@ export const SlideInView: React.FC<SlideInViewProps> = props => {
   //the element "SlideInView" -> all children of this will be dragged along with this animating "frame"/which in react native
   //is called a view.
 };
+
+type ChangingTextProps = PropsWithChildren<{style: ViewStyle, startText:string, endText:string, prompt: boolean}>;
+
+export const ChangingTextProps: React.FC<ChangingTextProps> = props => { 
+  const [curText, setText] = useState(props.startText);
+  useEffect(()=>
+    {
+      if(props.prompt == false)
+        {
+          setText(props.startText);
+        }else{
+          setText(props.endText);
+        }
+    }
+  ), [props.prompt]
+  return(
+    <Text style={{...props.style}}>curText</Text>
+  );
+}

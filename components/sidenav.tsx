@@ -11,7 +11,7 @@ export function SideNav() {
     return (
         <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={HomeScreen} />
+            <Drawer.Screen name="Navigation" component={HomeScreen} />
             <Drawer.Screen name="Tips" component={TipsScreen} />
             <Drawer.Screen name="Settings" component={SettingsScreen} />
             <Drawer.Screen name="Favourites" component={FavouritesScreen} />

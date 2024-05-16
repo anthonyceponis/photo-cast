@@ -10,7 +10,8 @@ import * as currentWeather from "./scripts/api";
 import { getZenithTime, getSunriseTime, getSunsetTime, pptime, goldenHourZenithAngle } from "./scripts/calculations";
 import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
-import { FadeInView, SlideInView, ISlidePositions } from "./components/squareDemo";
+import { FadeInView, SlideInView, ISlidePositions, ChangingTextButton } from "./components/squareDemo";
+
 export function HomeScreen() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
@@ -45,15 +46,16 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <Nav />
+            <View className="absolute top-0 left-0 w-screen bg-black p-3">
+            </View>
             <Map />
 
             <SlideInView
                     style={{zIndex: 2}}
-                    positions={{startX: 175, startY: -350, endX: -175, endY: -350}} 
+                    positions={{startX: 175, startY: -325, endX: -175, endY: -325}} 
                     prompt={isSideNavOpen}
                 >
-                <Button title="Search" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)} } />
+                <Button title = "search" onPress={() => {setIsSideNavOpen(!isSideNavOpen); console.log(isSideNavOpen)}}/> 
             </SlideInView>
 
             <SlideInView 
