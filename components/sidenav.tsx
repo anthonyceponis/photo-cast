@@ -10,7 +10,7 @@ const Drawer = createDrawerNavigator();
 export function SideNav() {
     return (
         <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home"
+            <Drawer.Navigator initialRouteName="Home"
         screenOptions={{
             headerShown: true,
             drawerStyle: {
