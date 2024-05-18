@@ -31,6 +31,8 @@ import {
     ISlidePositions,
 } from "./components/squareDemo";
 
+import { IOpenedCard } from "./components/footer";
+
 export function HomeScreen() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
@@ -44,6 +46,9 @@ export function HomeScreen() {
 
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
+
+    const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
+    const [openedCard, setOpenedCard] = useState<IOpenedCard>(); //Currently opened card
 
     // Call API for weather data
     useEffect(() => {
@@ -82,7 +87,7 @@ export function HomeScreen() {
 
             <SlideInView
                 style={{ zIndex: 2 }}
-                positions={{ startX: 175, startY: -400, endX: 300, endY: -325 }}
+                positions={{ startX: 175, startY: -800, endX: 300, endY: -800}}
                 prompt={isSideNavOpen}
             >
                 <Button
@@ -113,7 +118,7 @@ export function HomeScreen() {
                 <WeatherContainer setIsOpen={setIsSideNavOpen} />
             </SlideInView>
 
-            <Footer />
+            <Footer openTabs={openTabs}/>
         </View>
     );
 }
