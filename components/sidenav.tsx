@@ -7,9 +7,21 @@ import { NavigationContainer } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
+const navTheme = {
+    dark:false,
+    colors: {
+        primary: '#fb923c',
+        background: '#fffbeb',
+        card:'#fff7ed',
+        text:'#020617',
+        border:'#27272a',
+        notification:'#ecfccb',
+    },
+  };
+
 export function SideNav() {
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={navTheme}>
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Tips" component={TipsScreen} />
