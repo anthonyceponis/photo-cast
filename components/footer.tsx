@@ -1,4 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 
@@ -13,7 +14,10 @@ export interface IOpenedCard {
     filters: string;
 }
 
-export const Footer = () => {
+//export const ClosedTabButton: React.FC<{cardName: string}>
+
+export const Footer: React.FC<{openTabs:Array<IOpenedCard>}> = props => {
+    //Map the openCards
     return (
         <View className="absolute bottom-0 flex justify-center items-center bg-black w-screen p-3">
             <View className="flex-row gap-5">

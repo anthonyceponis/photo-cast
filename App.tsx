@@ -16,7 +16,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import * as currentWeather from "./scripts/api";
-
 import {
     getZenithTime,
     getSunriseTime,
@@ -26,7 +25,13 @@ import {
 } from "./scripts/calculations";
 import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
-import { FadeInView, SlideInView, ISlidePositions} from "./components/squareDemo";
+import {
+    FadeInView,
+    SlideInView,
+    ISlidePositions,
+} from "./components/squareDemo";
+
+import { IOpenedCard } from "./components/footer";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -42,6 +47,9 @@ export function HomeScreen() {
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
 
+    const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
+    const [openedCard, setOpenedCard] = useState<IOpenedCard>(); //Currently opened card
+
     // Call API for weather data
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +62,8 @@ export function HomeScreen() {
             );
             setLong(await currentWeather.getWeatherInfoByName("london").long);
             setLat(await currentWeather.getWeatherInfoByName("london").lat);
+
+            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
         };
         fetchData();
     }, []);
@@ -71,13 +81,13 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <View className="absolute top-0 left-0 w-screen p-3">
+            <View className="absolute top-0 left-0 w-screen bg-black p-3">
             </View>
             <Map />
 
             <SlideInView
                 style={{ zIndex: 2 }}
-                positions={{ startX: 175, startY: -400, endX: 300, endY: -325 }}
+                positions={{ startX: 175, startY: -800, endX: 300, endY: -800}}
                 prompt={isSideNavOpen}
             >
                 <Button
@@ -108,7 +118,7 @@ export function HomeScreen() {
                 <WeatherContainer setIsOpen={setIsSideNavOpen} />
             </SlideInView>
 
-            <Footer />
+            <Footer openTabs={openTabs}/>
         </View>
     );
 }

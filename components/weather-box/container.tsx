@@ -12,8 +12,9 @@ import {
 import { WeatherInformation } from "./weather-information";
 const cityData = require("../../assets/cities.json");
 
-interface ICity {
+export interface ICity {
     city: String;
+    lat: String;
     lng: String;
     country: String;
     iso2: String;
