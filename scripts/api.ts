@@ -26,11 +26,12 @@ interface WeatherInfo {
   eveningGHstart:number,
   sunsetTime:number,
   morningBHstart:number,
-  eveningBHend:number
+  eveningBHend:number,
+  timestamp:string
 }
 async function getWeatherInfo(url:string):Promise<WeatherInfo[]>
 {
-  const date = moment();
+  let date = moment();
   const timezone = date.utcOffset()/60;
   let data:any;
 
@@ -50,6 +51,7 @@ async function getWeatherInfo(url:string):Promise<WeatherInfo[]>
   let returnData = [];
   for (let i = 0; i < data.list.length; i++)
   {
+    date = moment(data.list[i].dt_txt);
     returnData.push(
       {
         name:data.city.name,
@@ -66,6 +68,7 @@ async function getWeatherInfo(url:string):Promise<WeatherInfo[]>
         sunsetTime:timezone+getSunsetTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat),
         morningBHstart:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, blueHourZenithAngle, true),
         eveningBHend:timezone+getZenithTime(date.year(), date.dayOfYear(), date.hour()-timezone, long, lat, blueHourZenithAngle, false),
+        timestamp:data.list[i].dt_txt
   })};
   return returnData;
 }
