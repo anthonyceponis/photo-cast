@@ -39,9 +39,23 @@ const allWeatherConditions = [
     "Cloudy",
 ];
 
-const ListItem = ({ item }: { item: string }) => {
+const ListItem = ({
+    item,
+    setShowSerachScreen,
+    setConditionOrLocation,
+}: {
+    item: string;
+    setShowSerachScreen: React.Dispatch<boolean>;
+    setConditionOrLocation: React.Dispatch<string>;
+}) => {
     return (
-        <Pressable className="bg-white text-black p-3 border-b border-gray-400">
+        <Pressable
+            className="bg-white text-black p-3 border-b border-gray-400"
+            onPress={() => {
+                setShowSerachScreen(false);
+                setConditionOrLocation(item);
+            }}
+        >
             <Text>{item}</Text>
         </Pressable>
     );
@@ -57,7 +71,9 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
         SearchMethods.Location
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [selectedLocation, setSelectedLocation] = useState<string>("London");
+    const [showSearchScreen, setShowSearchScreen] = useState<boolean>(false);
+    const [selectedLocation, setSelectedLocation] = useState<string>("");
+    const [selectedCondition, setSelectedCondition] = useState<string>("");
     const [cityList, setCityList] = useState(
         cityData.map((city: ICity) => city.city.toLowerCase())
     );
@@ -90,78 +106,106 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                 style={{ width: windowWidth - 20 }}
                 className="bg-white rounded mx-auto mt-24"
             >
-                <WeatherInformation city={selectedLocation} />
-                {/* <View className="bg-white rounded p-3">
-                    <Pressable
-                        className="text-right flex-row justify-end"
-                        onPress={() => setIsOpen(false)}
-                    >
-                        <FontAwesomeIcon size={25} icon={faXmark} />
-                    </Pressable>
-                    <Text className="font-semibold mb-2">Search by...</Text>
-                    <View className="flex flex-row gap-3 mb-3">
+                {showSearchScreen ? (
+                    <View className="bg-white rounded p-3">
                         <Pressable
-                            className={`border rounded-full px-3 py-2 ${
-                                searchMethod === SearchMethods.Location
-                                    ? "bg-black"
-                                    : "bg-white"
-                            }`}
-                            onPress={() =>
-                                setSearchMethod(SearchMethods.Location)
-                            }
+                            className="text-right flex-row justify-end"
+                            onPress={() => setIsOpen(false)}
                         >
-                            <Text
-                                className={`font-semibold ${
-                                    searchMethod === SearchMethods.Location
-                                        ? "text-white"
-                                        : "text-black"
-                                }`}
-                            >
-                                Location
-                            </Text>
+                            <FontAwesomeIcon size={25} icon={faXmark} />
                         </Pressable>
-                        <Pressable
-                            className={`border rounded-full px-3 py-2 ${
-                                searchMethod === SearchMethods.Condition
-                                    ? "bg-black"
-                                    : "bg-white"
-                            }`}
-                            onPress={() =>
-                                setSearchMethod(SearchMethods.Condition)
+                        <Text className="font-semibold mb-2">Search by...</Text>
+                        <View className="flex flex-row gap-3 mb-3">
+                            <Pressable
+                                className={`border rounded-full px-3 py-2 ${
+                                    searchMethod === SearchMethods.Location
+                                        ? "bg-black"
+                                        : "bg-white"
+                                }`}
+                                onPress={() =>
+                                    setSearchMethod(SearchMethods.Location)
+                                }
+                            >
+                                <Text
+                                    className={`font-semibold ${
+                                        searchMethod === SearchMethods.Location
+                                            ? "text-white"
+                                            : "text-black"
+                                    }`}
+                                >
+                                    Location
+                                </Text>
+                            </Pressable>
+                            <Pressable
+                                className={`border rounded-full px-3 py-2 ${
+                                    searchMethod === SearchMethods.Condition
+                                        ? "bg-black"
+                                        : "bg-white"
+                                }`}
+                                onPress={() =>
+                                    setSearchMethod(SearchMethods.Condition)
+                                }
+                            >
+                                <Text
+                                    className={`font-semibold ${
+                                        searchMethod === SearchMethods.Location
+                                            ? "text-black"
+                                            : "text-white"
+                                    }`}
+                                >
+                                    Condition
+                                </Text>
+                            </Pressable>
+                        </View>
+                        <TextInput
+                            className="border rounded px-3 py-2 mb-5 bg-white"
+                            placeholder="Enter location or weather condition"
+                            onChangeText={(value: string) =>
+                                setSearchQuery(value)
                             }
-                        >
-                            <Text
-                                className={`font-semibold ${
-                                    searchMethod === SearchMethods.Location
-                                        ? "text-black"
-                                        : "text-white"
-                                }`}
-                            >
-                                Condition
-                            </Text>
-                        </Pressable>
+                        />
+                        {searchMethod === SearchMethods.Location ? (
+                            <FlatList
+                                data={cityList}
+                                className="rounded max-h-96"
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        item={item}
+                                        setShowSerachScreen={
+                                            setShowSearchScreen
+                                        }
+                                        setConditionOrLocation={
+                                            setSelectedLocation
+                                        }
+                                    />
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        ) : (
+                            <FlatList
+                                data={weatherConditionList}
+                                className="rounded max-h-52"
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        item={item}
+                                        setShowSerachScreen={
+                                            setShowSearchScreen
+                                        }
+                                        setConditionOrLocation={
+                                            setSelectedLocation
+                                        }
+                                    />
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        )}
                     </View>
-                    <TextInput
-                        className="border rounded px-3 py-2 mb-5 bg-white"
-                        placeholder="Enter location or weather condition"
-                        onChangeText={(value: string) => setSearchQuery(value)}
+                ) : (
+                    <WeatherInformation
+                        setShowSearchScreen={setShowSearchScreen}
+                        city={selectedLocation}
                     />
-                    {searchMethod === SearchMethods.Location ? (
-                        <FlatList
-                            data={cityList}
-                            className="rounded max-h-96"
-                            renderItem={({ item }) => <ListItem item={item} />}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    ) : (
-                        <FlatList
-                            data={weatherConditionList}
-                            className="rounded max-h-52"
-                            renderItem={({ item }) => <ListItem item={item} />}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    )}
-                </View> */}
+                )}
             </View>
         </View>
     );

@@ -1,6 +1,6 @@
-import { faSun } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { StyledText } from "../styled-text";
 
 function generateRandomIntegers(
@@ -18,6 +18,7 @@ function generateRandomIntegers(
 
 interface IProps {
     city: string;
+    setShowSearchScreen: React.Dispatch<boolean>;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -31,9 +32,18 @@ const dailyWeatherLows = generateRandomIntegers(7, 0, 30);
 const hourlyWeather = generateRandomIntegers(24, 0, 30);
 const daysOfWeek = getNextSevenDaysThreeLetterCodes();
 
-export const WeatherInformation: React.FC<IProps> = ({ city }) => {
+export const WeatherInformation: React.FC<IProps> = ({
+    city,
+    setShowSearchScreen,
+}) => {
     return (
         <View className="bg-white rounded p-3">
+            <Pressable
+                className="p-2 m-1"
+                onPress={() => setShowSearchScreen(true)}
+            >
+                <FontAwesomeIcon size={20} icon={faArrowLeft} />
+            </Pressable>
             <StyledText className="text-black font-semibold mt-3 mb-5 text-center text-3xl">
                 {city}
             </StyledText>
