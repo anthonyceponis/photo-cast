@@ -63,7 +63,13 @@ export function HomeScreen() {
             setLong(await currentWeather.getWeatherInfoByName("london").long);
             setLat(await currentWeather.getWeatherInfoByName("london").lat);
 
-            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
+            console.log(
+                currentWeather.getNearbyLocationsWithCondition(
+                    52.2053,
+                    0.1192,
+                    "Clouds"
+                )
+            );
         };
         fetchData();
     }, []);
@@ -81,13 +87,12 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <View className="absolute top-0 left-0 w-screen bg-black p-3">
-            </View>
+            <View className="absolute top-0 left-0 w-screen bg-black p-3"></View>
             <Map />
 
             <SlideInView
                 style={{ zIndex: 2 }}
-                positions={{ startX: 175, startY: -800, endX: 300, endY: -800}}
+                positions={{ startX: 175, startY: -800, endX: 300, endY: -800 }}
                 prompt={isSideNavOpen}
             >
                 <Button
@@ -115,10 +120,14 @@ export function HomeScreen() {
                     <FontAwesomeIcon icon={faSearch} />
                 </Pressable>
 
-                <WeatherContainer setIsOpen={setIsSideNavOpen} />
+                <WeatherContainer
+                    setIsOpen={setIsSideNavOpen}
+                    openCards={openTabs}
+                    setOpenCards={setOpenTabs}
+                />
             </SlideInView>
 
-            <Footer openTabs={openTabs}/>
+            <Footer openTabs={openTabs} />
         </View>
     );
 }
