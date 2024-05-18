@@ -6,6 +6,7 @@ import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 export enum CardType {
     Location,
     Condition,
+    Favourite,
 }
 
 export interface IOpenedCard {

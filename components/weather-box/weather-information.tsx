@@ -3,6 +3,8 @@ import {
     faMinus,
     faPlus,
     faSun,
+    faStar,
+    faStarHalf
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -106,6 +108,60 @@ export const WeatherInformation: React.FC<IProps> = ({
                             />
                         </Pressable>
                     ) : null}
+
+
+ {!openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1"
+                            onPress={() => {
+                                setOpenCards([
+                                    ...openCards,
+                                    {
+                                        type: CardType.Location,
+                                        name: city,
+                                        filters: "",
+                                    },
+                                ]);
+                            }}
+                        >
+                            <FontAwesomeIcon size={20} icon={faStarHalf} />
+                        </Pressable>
+                    ) : null}
+                    {openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1 rounded"
+                            disabled={
+                                !openCards
+                                    .map((card: IOpenedCard) => card.name)
+                                    .includes(city)
+                            }
+                            onPress={() => {
+                                setOpenCards(
+                                    openCards.filter(
+                                        (card) => card.name !== city
+                                    )
+                                );
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                color={
+                                    !openCards
+                                        .map((card: IOpenedCard) => card.name)
+                                        .includes(city)
+                                        ? "red"
+                                        : "black"
+                                }
+                                size={20}
+                                icon={faStar}
+                            />
+                        </Pressable>
+                    ) : null}
+
+
                 </View>
             </View>
             <StyledText className="text-black font-semibold mt-3 mb-5 text-center text-3xl">
