@@ -1,76 +1,104 @@
-import { ActivityIndicatorBase, Text, View} from "react-native";
+import {
+    Pressable,
+    SafeAreaView,
+    ActivityIndicatorBase,
+    Button,
+    Text,
+    View,
+} from "react-native";
 import { Nav } from "./components/nav";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
-import React, {useEffect, useState} from 'react';
-import * as currentWeather from "./scripts/api";
-import moment from 'moment';
 
-import { pptime } from "./scripts/calculations";
+import { WeatherContainer } from "./components/weather-box/container";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useState } from "react";
+import * as currentWeather from "./scripts/api";
+import {
+    getZenithTime,
+    getSunriseTime,
+    getSunsetTime,
+    pptime,
+    goldenHourZenithAngle,
+} from "./scripts/calculations";
+import moment from 'moment';
 import { NavigationContainer } from "@react-navigation/native";
 import { SideNav } from "./components/sidenav";
+import {
+    FadeInView,
+    SlideInView,
+    ISlidePositions,
+} from "./components/squareDemo";
+
+import { IOpenedCard } from "./components/footer";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
     // Use const [Info, setInfo] = useState(null);  and setInfo(await CurrentWeather.fetchInfo());
     // to add more info from API
 
-    const [Name, setName] = useState<null | string>();
-    const [Temperature, setTemperature] = useState<null | string>(null);
-    const [Description, setDescription] = useState<null | string>(null);
-    const [Long, setLong] = useState(0);
-    const [Lat, setLat] = useState(0);
-    const [sunriseTime, setSunriseTime] = useState(0);
-    const [morningGHend, setMorningGHend] = useState(0);
-    const [eveningGHstart, setEveningGHstart] = useState(0);
-    const [sunsetTime, setSunsetTime] = useState(0);
-    const [date, setDate] = useState(moment());
+    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+    const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
+
+    const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
+    const [openedCard, setOpenedCard] = useState<IOpenedCard>(); //Currently opened card
 
     // Call API for weather data
     useEffect(() => {
         const fetchData = async () => {
-            const data = await currentWeather.getWeatherInfoByName('london');
-            setName(data[0].name);
-            setTemperature(data[0].temperature);
-            setDescription(data[0].description);
-            setLong(data[0].long);
-            setLat(data[0].lat);
-            setSunriseTime(data[0].sunriseTime);
-            setMorningGHend(data[0].morningGHend);
-            setEveningGHstart(data[0].eveningGHstart);
-            setSunsetTime(data[0].sunsetTime);
+            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
         };
         fetchData();
     }, []);
 
 
 
-
     return (
         <View className="flex-1 items-center justify-center bg-orange-50">
-            <Nav />
+            <View className="absolute top-0 left-0 w-screen p-3">
+            </View>
             <Map />
-            <Footer />
 
-            <Text>Location: {Name} </Text>
-            <Text>Temperature: {Temperature ? ((parseFloat(Temperature) - 273.15).toFixed(2)+"°C"):'N/A'}</Text>
-            <Text>Location Description: {Description} </Text>
-            <Text>Location Latitude: {Lat} </Text>
-            <Text>Location Longitude: {Long} </Text>
-            <Text>Sunrise time: {pptime(sunriseTime, true)}</Text>
-            <Text>Morning golden hour end time: {pptime(morningGHend, true)}</Text>
-            <Text>Evening golden hour start time: {pptime(eveningGHstart, true)}</Text>
-            <Text>Sunset time: {pptime(sunsetTime, true)}</Text>
-            <Text>Current time: {date.format("HH:mm:ss")}</Text>
+            <SlideInView
+                style={{ zIndex: 2 }}
+                positions={{ startX: 175, startY: -800, endX: 300, endY: -800}}
+                prompt={isSideNavOpen}
+            >
+                <Button
+                    title="search"
+                    onPress={() => {
+                        setIsSideNavOpen(!isSideNavOpen);
+                        console.log(isSideNavOpen);
+                    }}
+                />
+            </SlideInView>
 
+            <SlideInView
+                style={{
+                    paddingVertical: 0,
+                    paddingHorizontal: 0,
+                    transform: [{ translateX: 800 }, { translateY: 0 }],
+                    zIndex: 1,
+                    flexGrow: 0,
+                    position: "absolute",
+                }}
+                positions={{ startX: 800, startY: 0, endX: 0, endY: 0 }}
+                prompt={isSideNavOpen}
+            >
+                <Pressable onPress={() => setWeatherBoxOpen(true)}>
+                    <FontAwesomeIcon icon={faSearch} />
+                </Pressable>
+
+                <WeatherContainer setIsOpen={setIsSideNavOpen} />
+            </SlideInView>
+
+            <Footer openTabs={openTabs}/>
         </View>
-        
     );
-};
-
+}
 
 export default function App() {
-    return (
-        <SideNav />
-    );
+    return <SideNav />;
 }

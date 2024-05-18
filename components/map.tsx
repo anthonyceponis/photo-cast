@@ -1,17 +1,16 @@
-import { Text, View } from "react-native";
-import MapView from "react-native-maps";
+import { Dimensions, Image, Text, View } from "react-native";
+// import MapView from "react-native-maps";
 
 export const Map = () => {
+    const windowWidth = Dimensions.get("window").width;
+
     return (
-        <View className="h-50 w-50 bg-red-500 block">
-            <Text>This is a map</Text>
-            <MapView
-                initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
+        <View>
+            <Text>This is a mp</Text>
+            <Image
+                source={require("../assets/united-kingdom.png")}
+                resizeMode="contain"
+                style={{ width: windowWidth - 100 }}
             />
         </View>
     );
