@@ -9,6 +9,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { WeatherInformation } from "./weather-information";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -57,7 +58,7 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
         SearchMethods.Location
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [selectedLocation, setSelectedLocation] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<string>("London");
     const [cityList, setCityList] = useState(
         cityData.map((city: ICity) => city.city.toLowerCase())
     );
@@ -90,7 +91,8 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                 style={{ width: windowWidth - 20 }}
                 className="bg-white rounded mx-auto mt-24"
             >
-                <View className="bg-white rounded p-3">
+                <WeatherInformation city={selectedLocation} />
+                {/* <View className="bg-white rounded p-3">
                     <Pressable
                         className="text-right flex-row justify-end"
                         onPress={() => setIsOpen(false)}
@@ -160,7 +162,7 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                             keyExtractor={(item, index) => index.toString()}
                         />
                     )}
-                </View>
+                </View> */}
             </View>
         </View>
     );
