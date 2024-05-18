@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { WeatherInformation } from "./weather-information";
 import { CardType, IOpenedCard } from "../footer";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontWeight, StyledText } from "../styled-text";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -46,14 +48,14 @@ const ListItem = ({
     setOpenedCard: React.Dispatch<IOpenedCard>;
 }) => {
     return (
-        <Pressable
-            className="bg-white text-black p-3 border-b border-gray-400"
+        <TouchableOpacity
+            className="bg-white text-black p-3 border-b border-gray-200"
             onPress={() => {
                 setOpenedCard({ type: cardType, name: item, filters: "" });
             }}
         >
-            <Text>{item}</Text>
-        </Pressable>
+            <StyledText>{item}</StyledText>
+        </TouchableOpacity>
     );
 };
 
@@ -108,20 +110,32 @@ export const WeatherContainer: React.FC<IProps> = ({
     }, [searchQuery]);
 
     return (
-        <View className="h-screen w-screen bg-black opacity-75">
+        <View className="h-screen w-screen relative">
             <View
-                style={{ width: windowWidth - 20 }}
-                className="bg-white rounded mx-auto mt-24"
+                onTouchEnd={() => {
+                    setOpenedCard(null);
+                    setIsOpen(false);
+                }}
+                className="bg-black opacity-75 w-screen h-screen absolute top-0 left-0"
+            />
+            <View
+                style={{
+                    width: windowWidth - 20,
+                    transform: "translateX(10px)",
+                }}
+                className="bg-gray-50 rounded mt-24 absolute"
             >
                 {!openedCard ? (
-                    <View className="bg-white rounded p-3">
-                        <Pressable
+                    <View className="rounded p-3">
+                        <TouchableOpacity
                             className="text-right flex-row justify-end"
                             onPress={() => setIsOpen(false)}
                         >
                             <FontAwesomeIcon size={25} icon={faXmark} />
-                        </Pressable>
-                        <Text className="font-semibold mb-2">Search by...</Text>
+                        </TouchableOpacity>
+                        <StyledText className="font-semibold mb-2">
+                            Search by...
+                        </StyledText>
                         <View className="flex flex-row gap-3 mb-3">
                             <Pressable
                                 className={`border rounded-full px-3 py-2 ${
@@ -133,7 +147,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     setSearchMethod(CardType.Location)
                                 }
                             >
-                                <Text
+                                <StyledText
                                     className={`font-semibold ${
                                         searchMethod === CardType.Location
                                             ? "text-white"
@@ -141,7 +155,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     }`}
                                 >
                                     Location
-                                </Text>
+                                </StyledText>
                             </Pressable>
                             <Pressable
                                 className={`border rounded-full px-3 py-2 ${
@@ -153,7 +167,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     setSearchMethod(CardType.Condition)
                                 }
                             >
-                                <Text
+                                <StyledText
                                     className={`font-semibold ${
                                         searchMethod === CardType.Location
                                             ? "text-black"
@@ -161,11 +175,12 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     }`}
                                 >
                                     Condition
-                                </Text>
+                                </StyledText>
                             </Pressable>
                         </View>
                         <TextInput
-                            className="border rounded px-3 py-2 mb-5 bg-white"
+                            style={{ fontFamily: "MontserratRegular" }}
+                            className="border border-gray-400 rounded px-3 py-2 mb-5 bg-white"
                             placeholder="Enter location or weather condition"
                             onChangeText={(value: string) =>
                                 setSearchQuery(value)

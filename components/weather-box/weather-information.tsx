@@ -5,8 +5,8 @@ import {
     faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { StyledText } from "../styled-text";
+import { TouchableOpacity, ScrollView, Text, View } from "react-native";
+import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
 
 function generateRandomIntegers(
@@ -47,19 +47,19 @@ export const WeatherInformation: React.FC<IProps> = ({
     setOpenCards,
 }) => {
     return (
-        <View className="bg-white rounded p-3">
+        <View className="rounded p-3">
             <View className="flex-row justify-between">
-                <Pressable
+                <TouchableOpacity
                     className="p-2 m-1"
                     onPress={() => setOpenedCard(null)}
                 >
                     <FontAwesomeIcon size={20} icon={faArrowLeft} />
-                </Pressable>
+                </TouchableOpacity>
                 <View className="flex-row">
                     {!openCards
                         .map((card: IOpenedCard) => card.name)
                         .includes(city) ? (
-                        <Pressable
+                        <TouchableOpacity
                             className="p-2 m-1"
                             onPress={() => {
                                 setOpenCards([
@@ -73,13 +73,13 @@ export const WeatherInformation: React.FC<IProps> = ({
                             }}
                         >
                             <FontAwesomeIcon size={20} icon={faPlus} />
-                        </Pressable>
+                        </TouchableOpacity>
                     ) : null}
                     {openCards
                         .map((card: IOpenedCard) => card.name)
                         .includes(city) ? (
-                        <Pressable
-                            className="p-2 m-1 bg-gray-200 rounded"
+                        <TouchableOpacity
+                            className="p-2 m-1 rounded"
                             disabled={
                                 !openCards
                                     .map((card: IOpenedCard) => card.name)
@@ -104,78 +104,107 @@ export const WeatherInformation: React.FC<IProps> = ({
                                 size={20}
                                 icon={faMinus}
                             />
-                        </Pressable>
+                        </TouchableOpacity>
                     ) : null}
                 </View>
             </View>
-            <StyledText className="text-black font-semibold mt-3 mb-5 text-center text-3xl">
+            <StyledText
+                weight={FontWeight.SemiBold}
+                className="text-black mt-3 mb-5 text-center text-3xl"
+                style={{ fontFamily: "MontserratBold", fontWeight: 600 }}
+            >
                 {city}
             </StyledText>
             <View className="w-32 bg-white aspect-square rounded-full flex justify-center items-center mb-5">
                 <StyledText className="text-3xl font-medium"> 20°C</StyledText>
             </View>
-            <ScrollView
-                horizontal={true}
-                className="mb-5 p-3 rounded bg-white shadow"
-            >
-                {dailyWeatherHighs.map((degrees, i) => {
-                    return (
-                        <View
-                            className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
-                                i === 0 ? "bg-gray-200" : "bg-white"
-                            }`}
-                        >
-                            <StyledText
-                                className={`font-medium ${
-                                    i === 0
-                                        ? "text-black font-semibold"
-                                        : "text-gray-400"
-                                }`}
-                            >
-                                {daysOfWeek[i]}
-                            </StyledText>
-                            <FontAwesomeIcon size={20} icon={faSun} />
-                            <View>
-                                <StyledText
-                                    className="font-light text-center"
-                                    style={{ fontSize: 17 }}
+            <View className="mb-5 py-3 rounded bg-white">
+                <ScrollView className="mx-3" horizontal={true}>
+                    <View className="flex-row">
+                        {dailyWeatherHighs.map((degrees, i) => {
+                            return (
+                                <View
+                                    className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
+                                        i === 0 ? "bg-gray-100" : "bg-white"
+                                    }`}
                                 >
-                                    {Math.max(degrees, dailyWeatherLows[i])}°
-                                </StyledText>
-                                <StyledText className="font-medium text-xs text-gray-400 text-center">
-                                    {Math.min(degrees, dailyWeatherLows[i])}°
-                                </StyledText>
-                            </View>
-                        </View>
-                    );
-                })}
-            </ScrollView>
-            <ScrollView
-                horizontal={true}
-                className="p-3 rounded bg-white shadow"
-            >
-                {hourlyWeather.map((degrees, i) => {
-                    return (
-                        <View
-                            className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
-                                i === 0 ? "bg-gray-200" : "bg-white"
-                            }`}
-                        >
-                            <StyledText
-                                className={`font-semibold ${
-                                    i === 0 ? "text-black" : "text-gray-400"
-                                }`}
-                            >
-                                {(i + new Date().getHours()) % 24}
-                            </StyledText>
-                            <View className="flex-row gap-x-1">
-                                <FontAwesomeIcon size={20} icon={faSun} />
-                                <StyledText>{degrees}°</StyledText>
-                            </View>
-                        </View>
-                    );
-                })}
-            </ScrollView>
+                                    <StyledText
+                                        weight={
+                                            i === 0
+                                                ? FontWeight.SemiBold
+                                                : FontWeight.Regular
+                                        }
+                                        className={`font-medium ${
+                                            i === 0
+                                                ? "text-black font-semibold"
+                                                : "text-gray-400"
+                                        }`}
+                                    >
+                                        {daysOfWeek[i]}
+                                    </StyledText>
+                                    <FontAwesomeIcon size={20} icon={faSun} />
+                                    <View>
+                                        <StyledText
+                                            className="font-light text-center"
+                                            style={{ fontSize: 17 }}
+                                        >
+                                            {Math.max(
+                                                degrees,
+                                                dailyWeatherLows[i]
+                                            )}
+                                            °
+                                        </StyledText>
+                                        <StyledText className="font-medium text-xs text-gray-400 text-center">
+                                            {Math.min(
+                                                degrees,
+                                                dailyWeatherLows[i]
+                                            )}
+                                            °
+                                        </StyledText>
+                                    </View>
+                                </View>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+            </View>
+            <View className="mb-5 py-3 rounded bg-white">
+                <ScrollView horizontal={true} className="mx-3">
+                    <View className="flex-row">
+                        {hourlyWeather.map((degrees, i) => {
+                            return (
+                                <View
+                                    className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
+                                        i === 0 ? "bg-gray-100" : "bg-white"
+                                    }`}
+                                >
+                                    <StyledText
+                                        weight={
+                                            i === 0
+                                                ? FontWeight.SemiBold
+                                                : FontWeight.Regular
+                                        }
+                                        className={`font-semibold ${
+                                            i === 0
+                                                ? "text-black"
+                                                : "text-gray-400"
+                                        }`}
+                                    >
+                                        {(i + new Date().getHours()) % 24}
+                                    </StyledText>
+                                    <View className="flex-row gap-x-1">
+                                        <FontAwesomeIcon
+                                            size={20}
+                                            icon={faSun}
+                                        />
+                                        <StyledText>{degrees}°</StyledText>
+                                    </View>
+                                </View>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+            </View>
         </View>
     );
 };
