@@ -31,7 +31,7 @@ import {
     ISlidePositions,
 } from "./components/squareDemo";
 
-import { IOpenedCard } from "./components/footer";
+import { IOpenedCard, CardType } from "./components/footer";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -63,7 +63,16 @@ export function HomeScreen() {
             setLong(await currentWeather.getWeatherInfoByName("london").long);
             setLat(await currentWeather.getWeatherInfoByName("london").lat);
 
-            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
+            //console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
+
+            //Adding some test tabs
+            let conditionTab1 = {type: CardType.Condition, name:"Golden Hour", filters:"Favourites"};
+            let locationTab1 = {type: CardType.Location, name:"Barnsley", filters:""};
+            let locationTab2 = {type: CardType.Location, name:"Sheffield", filters:""};
+            let locationTab3 = {type: CardType.Location, name:"Doncaster", filters:""};
+            let locationTab4 = {type: CardType.Location, name:"Rotherham", filters:""};
+            let locationTab5 = {type: CardType.Location, name:"Leeds", filters:""};
+            setOpenTabs([conditionTab1, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5]);
         };
         fetchData();
     }, []);
@@ -118,7 +127,7 @@ export function HomeScreen() {
                 <WeatherContainer setIsOpen={setIsSideNavOpen} />
             </SlideInView>
 
-            <Footer openTabs={openTabs}/>
+            <Footer openTabs={openTabs} setCurCard={setOpenedCard}/>
         </View>
     );
 }
