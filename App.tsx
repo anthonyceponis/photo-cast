@@ -66,37 +66,13 @@ export function HomeScreen() {
             //console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
 
             //Adding some test tabs
-            let conditionTab1 = {
-                type: CardType.Condition,
-                name: "Golden Hour",
-                filters: "Favourites",
-            };
-            let locationTab1 = {
-                type: CardType.Location,
-                name: "Barnsley",
-                filters: "",
-            };
-            let locationTab2 = {
-                type: CardType.Location,
-                name: "Sheffield",
-                filters: "",
-            };
-            let locationTab3 = {
-                type: CardType.Location,
-                name: "Doncaster",
-                filters: "",
-            };
-            let locationTab4 = {
-                type: CardType.Location,
-                name: "Rotherham",
-                filters: "",
-            };
-            let locationTab5 = {
-                type: CardType.Location,
-                name: "Leeds",
-                filters: "",
-            };
-            setOpenTabs([]);
+            let conditionTab1 = {type: CardType.Condition, name:"Golden Hour", filters:"Favourites"};
+            let locationTab1 = {type: CardType.Location, name:"Barnsley", filters:""};
+            let locationTab2 = {type: CardType.Location, name:"Sheffield", filters:""};
+            let locationTab3 = {type: CardType.Location, name:"Doncaster", filters:""};
+            let locationTab4 = {type: CardType.Location, name:"Rotherham", filters:""};
+            let locationTab5 = {type: CardType.Location, name:"Leeds", filters:""};
+            setOpenTabs([conditionTab1, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5,]);
         };
         fetchData();
     }, []);
@@ -114,12 +90,13 @@ export function HomeScreen() {
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
-            <View className="absolute top-0 left-0 w-screen bg-black p-3"></View>
+            <View className="absolute top-0 left-0 w-screen bg-black p-3">
+            </View>
             <Map />
 
             <SlideInView
                 style={{ zIndex: 2 }}
-                positions={{ startX: 175, startY: -800, endX: 300, endY: -800 }}
+                positions={{ startX: 175, startY: -800, endX: 300, endY: -800}}
                 prompt={isSideNavOpen}
             >
                 <Button
@@ -155,7 +132,8 @@ export function HomeScreen() {
                     setOpenCards={setOpenTabs}
                 />
             </SlideInView>
-            <Footer openTabs={openTabs} setCurCard={setOpenedCard} />
+
+            <Footer openTabs={openTabs} setCurCard={setOpenedCard}/>
         </View>
     );
 }
