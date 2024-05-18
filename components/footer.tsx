@@ -2,6 +2,17 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 
+export enum CardType {
+    Location,
+    Condition,
+}
+
+export interface IOpenedCard {
+    type: CardType;
+    name: string;
+    filters: string;
+}
+
 export const Footer = () => {
     return (
         <View className="absolute bottom-0 flex justify-center items-center bg-black w-screen p-3">
