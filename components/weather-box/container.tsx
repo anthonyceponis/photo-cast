@@ -59,10 +59,22 @@ const ListItem = ({
     );
 };
 
-const favouriteLocations = [
+let favouriteLocations = [
     "Cambridge",
     "London",
 ];
+
+function toggleFavouriteLocation(location: string): string[] {
+    const locationIndex = favouriteLocations.indexOf(location);
+    if (locationIndex === -1) {
+        // If location is not in the list, add it
+        favouriteLocations = [...favouriteLocations, location];
+    } else {
+        // If location is in the list, remove it
+        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+    }
+    return favouriteLocations;
+}
 
 interface IProps {
     setIsOpen: React.Dispatch<boolean>;
@@ -264,6 +276,8 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city={openedCard.name}
                         openCards={openCards}
                         setOpenCards={setOpenCards}
+                        toggleFavourites={toggleFavouriteLocation}
+                        favourites={favouriteLocations}
                     />
                 )}
             </View>
