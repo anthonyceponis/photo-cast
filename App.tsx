@@ -48,7 +48,7 @@ export function HomeScreen() {
     const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
 
     const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
-    const [openedCard, setOpenedCard] = useState<IOpenedCard>(); //Currently opened card
+    const [openedCard, setOpenedCard] = useState<IOpenedCard | null>(null); //Currently opened card
 
     // Call API for weather data
     useEffect(() => {
@@ -62,14 +62,6 @@ export function HomeScreen() {
             );
             setLong(await currentWeather.getWeatherInfoByName("london").long);
             setLat(await currentWeather.getWeatherInfoByName("london").lat);
-
-            console.log(
-                currentWeather.getNearbyLocationsWithCondition(
-                    52.2053,
-                    0.1192,
-                    "Clouds"
-                )
-            );
         };
         fetchData();
     }, []);
@@ -122,6 +114,8 @@ export function HomeScreen() {
 
                 <WeatherContainer
                     setIsOpen={setIsSideNavOpen}
+                    openedCard={openedCard}
+                    setOpenedCard={setOpenedCard}
                     openCards={openTabs}
                     setOpenCards={setOpenTabs}
                 />
