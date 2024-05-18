@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
     Dimensions,
     FlatList,
+    Keyboard,
     Pressable,
     TextInput,
     View,
@@ -139,8 +140,8 @@ export const WeatherContainer: React.FC<IProps> = ({
                     <View className="rounded p-3">
                         <TouchableOpacity
                             className="text-right flex-row justify-end"
-                            onPress={() => setIsOpen(false)}
-                        >
+                            onPress={() => {setIsOpen(false); Keyboard.dismiss()}}
+                        > 
                             <FontAwesomeIcon size={25} icon={faXmark} />
                         </TouchableOpacity>
                         <StyledText className="font-semibold mb-2">
