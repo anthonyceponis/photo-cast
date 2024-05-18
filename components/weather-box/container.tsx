@@ -84,6 +84,10 @@ export const WeatherContainer: React.FC<IProps> = ({
         useState(allWeatherConditions);
 
     useEffect(() => {
+        if (openedCard !== null) setIsOpen(true);
+    }, [openedCard]);
+
+    useEffect(() => {
         if (searchMethod === CardType.Location) {
             setCityList(
                 cityData

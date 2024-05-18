@@ -154,27 +154,29 @@ export const WeatherInformation: React.FC<IProps> = ({
                 horizontal={true}
                 className="p-3 rounded bg-white shadow"
             >
-                {hourlyWeather.map((degrees, i) => {
-                    return (
-                        <View
-                            className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
-                                i === 0 ? "bg-gray-200" : "bg-white"
-                            }`}
-                        >
-                            <StyledText
-                                className={`font-semibold ${
-                                    i === 0 ? "text-black" : "text-gray-400"
+                <View>
+                    {hourlyWeather.map((degrees, i) => {
+                        return (
+                            <View
+                                className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
+                                    i === 0 ? "bg-gray-200" : "bg-white"
                                 }`}
                             >
-                                {(i + new Date().getHours()) % 24}
-                            </StyledText>
-                            <View className="flex-row gap-x-1">
-                                <FontAwesomeIcon size={20} icon={faSun} />
-                                <StyledText>{degrees}°</StyledText>
+                                <StyledText
+                                    className={`font-semibold ${
+                                        i === 0 ? "text-black" : "text-gray-400"
+                                    }`}
+                                >
+                                    {(i + new Date().getHours()) % 24}
+                                </StyledText>
+                                <View className="flex-row gap-x-1">
+                                    <FontAwesomeIcon size={20} icon={faSun} />
+                                    <StyledText>{degrees}°</StyledText>
+                                </View>
                             </View>
-                        </View>
-                    );
-                })}
+                        );
+                    })}
+                </View>
             </ScrollView>
         </View>
     );
