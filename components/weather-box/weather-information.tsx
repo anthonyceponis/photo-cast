@@ -24,7 +24,7 @@ function generateRandomIntegers(
 
 interface IProps {
     city: string;
-    setShowSearchScreen: React.Dispatch<boolean>;
+    setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
 }
@@ -42,7 +42,7 @@ const daysOfWeek = getNextSevenDaysThreeLetterCodes();
 
 export const WeatherInformation: React.FC<IProps> = ({
     city,
-    setShowSearchScreen,
+    setOpenedCard,
     openCards,
     setOpenCards,
 }) => {
@@ -51,54 +51,61 @@ export const WeatherInformation: React.FC<IProps> = ({
             <View className="flex-row justify-between">
                 <Pressable
                     className="p-2 m-1"
-                    onPress={() => setShowSearchScreen(true)}
+                    onPress={() => setOpenedCard(null)}
                 >
                     <FontAwesomeIcon size={20} icon={faArrowLeft} />
                 </Pressable>
                 <View className="flex-row">
-                    <Pressable
-                        className="p-2 m-1 bg-black"
-                        disabled={openCards
-                            .map((card: IOpenedCard) => card.name)
-                            .includes(city)}
-                        onPress={() => {
-                            setOpenCards([
-                                ...openCards,
-                                {
-                                    type: CardType.Location,
-                                    name: city,
-                                    filters: "",
-                                },
-                            ]);
-                        }}
-                    >
-                        <FontAwesomeIcon size={20} icon={faPlus} />
-                    </Pressable>
-                    <Pressable
-                        className="p-2 m-1 bg-gray-200 rounded"
-                        disabled={
-                            !openCards
-                                .map((card: IOpenedCard) => card.name)
-                                .includes(city)
-                        }
-                        onPress={() => {
-                            setOpenCards(
-                                openCards.filter((card) => card.name !== city)
-                            );
-                        }}
-                    >
-                        <FontAwesomeIcon
-                            color={
+                    {!openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1"
+                            onPress={() => {
+                                setOpenCards([
+                                    ...openCards,
+                                    {
+                                        type: CardType.Location,
+                                        name: city,
+                                        filters: "",
+                                    },
+                                ]);
+                            }}
+                        >
+                            <FontAwesomeIcon size={20} icon={faPlus} />
+                        </Pressable>
+                    ) : null}
+                    {openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1 bg-gray-200 rounded"
+                            disabled={
                                 !openCards
                                     .map((card: IOpenedCard) => card.name)
                                     .includes(city)
-                                    ? "red"
-                                    : "black"
                             }
-                            size={20}
-                            icon={faMinus}
-                        />
-                    </Pressable>
+                            onPress={() => {
+                                setOpenCards(
+                                    openCards.filter(
+                                        (card) => card.name !== city
+                                    )
+                                );
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                color={
+                                    !openCards
+                                        .map((card: IOpenedCard) => card.name)
+                                        .includes(city)
+                                        ? "red"
+                                        : "black"
+                                }
+                                size={20}
+                                icon={faMinus}
+                            />
+                        </Pressable>
+                    ) : null}
                 </View>
             </View>
             <StyledText className="text-black font-semibold mt-3 mb-5 text-center text-3xl">
