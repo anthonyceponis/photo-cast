@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 import { WeatherInformation } from "./weather-information";
+import { IOpenedCard } from "../footer";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -64,9 +65,15 @@ const ListItem = ({
 
 interface IProps {
     setIsOpen: React.Dispatch<boolean>;
+    openCards: IOpenedCard[];
+    setOpenCards: React.Dispatch<IOpenedCard[]>;
 }
 
-export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
+export const WeatherContainer: React.FC<IProps> = ({
+    setIsOpen,
+    openCards,
+    setOpenCards,
+}) => {
     const windowWidth = Dimensions.get("window").width;
     const [searchMethod, setSearchMethod] = useState<SearchMethods>(
         SearchMethods.Location
@@ -205,6 +212,8 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                     <WeatherInformation
                         setShowSearchScreen={setShowSearchScreen}
                         city={selectedLocation}
+                        openCards={openCards}
+                        setOpenCards={setOpenCards}
                     />
                 )}
             </View>

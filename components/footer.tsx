@@ -16,7 +16,7 @@ export interface IOpenedCard {
 
 //export const ClosedTabButton: React.FC<{cardName: string}>
 
-export const Footer: React.FC<{openTabs:Array<IOpenedCard>}> = props => {
+export const Footer: React.FC<{ openTabs: Array<IOpenedCard> }> = (props) => {
     //Map the openCards
     return (
         <View className="absolute bottom-0 flex justify-center items-center bg-black w-screen p-3">
