@@ -127,6 +127,23 @@ const fetchCloudCoverage = async (url:string) => {
   }
 }
 
+interface IReverseResponse{
+  name:string,
+  local_names:Array<string>,
+  lat:string,
+  lon:string,
+  country:string
+}
+export const getLocationByCoords = async(lat:number, lng:number) =>
+{
+  console.log("Getting location by coords");
+  const urlReverse = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lng}&limit=${1}&appid=${apiKey}`;
+  const response = await axios.get(urlReverse);
+  const locations = response.data;
+  console.log(locations[0]);
+  return(locations[0].name);
+}
+
 const cityData = require("../assets/cities.json");
 
 export function getNearbyLocations(ourLat:number, ourLng:number)
