@@ -71,6 +71,7 @@ export const Footer: React.FC<{
                 paddingHorizontal: 400,
                 paddingVertical: 10,
                 height: 100,
+                zIndex: 5,
             }}
         >
             <ScrollView

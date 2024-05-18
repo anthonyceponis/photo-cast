@@ -96,24 +96,7 @@ export function HomeScreen() {
                 name: "Leeds",
                 filters: "",
             };
-            setOpenTabs([
-                conditionTab1,
-                locationTab1,
-                locationTab2,
-                locationTab3,
-                locationTab4,
-                locationTab5,
-                locationTab1,
-                locationTab2,
-                locationTab3,
-                locationTab4,
-                locationTab5,
-                locationTab1,
-                locationTab2,
-                locationTab3,
-                locationTab4,
-                locationTab5,
-            ]);
+            setOpenTabs([]);
         };
         fetchData();
     }, []);
