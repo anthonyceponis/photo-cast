@@ -119,7 +119,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                         <Pressable
                             className="text-right flex-row justify-end"
                             onPress={() => {setIsOpen(false); Keyboard.dismiss()}}
-                        >
+                        > 
                             <FontAwesomeIcon size={25} icon={faXmark} />
                         </Pressable>
                         <Text className="font-semibold mb-2">Search by...</Text>
