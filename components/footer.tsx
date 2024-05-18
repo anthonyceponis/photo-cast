@@ -62,6 +62,7 @@ export const Footer: React.FC<{openTabs:Array<IOpenedCard>, setCurCard:React.Dis
             width: '50%', 
             paddingHorizontal: 400, 
             paddingVertical: 10,
+            zIndex: 5,
             height: 100 }}>
         <ScrollView horizontal={true} 
         style={ {
