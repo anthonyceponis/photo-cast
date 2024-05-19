@@ -136,7 +136,7 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
                                         }
                                         className={`font-medium ${
                                             i === 0
-                                                ? "text-black font-semibold"
+                                                ? "text-black"
                                                 : "text-gray-400"
                                         }`}
                                     >

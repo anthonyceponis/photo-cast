@@ -9,7 +9,7 @@ import {
     faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function generateRandomIntegers(
     count: number,
@@ -33,25 +33,22 @@ interface IProps {
 
 const getNextSevenDaysThreeLetterCodes = () => {
     const todayIndex = new Date().getDay();
-    const dayCodes = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-    return [...Array(7).keys()].map((i) => dayCodes[(i - 1 + todayIndex) % 7]);
+    const dayCodes = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    return [...Array(7).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
 };
 
 const dailyWeatherHighs = generateRandomIntegers(7, 0, 30);
 const dailyWeatherLows = generateRandomIntegers(7, 0, 30);
 const daysOfWeek = getNextSevenDaysThreeLetterCodes();
 
-interface INearbyByLocation {
+interface ILocations {
     name: string;
     distance: number;
-    time: string;
+    time: Date;
 }
 
-const nearbyLocationsDefault: INearbyByLocation[] = [
-    { name: "Cambridge", distance: 1, time: "17:00" },
-    { name: "London", distance: 2.3, time: "19:00" },
-    { name: "Luton", distance: 5, time: "06:00" },
-    { name: "Sheffield", distance: 3.1, time: "11:00" },
+const locationsDefault: ILocations[] = [
+    { name: "Cambridge", distance: 1, time: new Date() },
 ];
 
 const styles = StyleSheet.create({
@@ -77,12 +74,10 @@ const styles = StyleSheet.create({
     },
 });
 
-enum FilterMethod {
-    Location,
-    Favourites,
+enum SortMethod {
+    Distance,
     Soonest,
     Latest,
-    Temperature,
 }
 
 export const WeatherConditionInformation: React.FC<IProps> = ({
@@ -91,12 +86,46 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
     openCards,
     setOpenCards,
 }) => {
-    const [nearbyLocations, setNearbyLocation] = useState<INearbyByLocation[]>(
-        nearbyLocationsDefault
+    const [locations, setLocations] = useState<ILocations[]>(locationsDefault);
+    const [sortMethod, setSortMethod] = useState<SortMethod>(
+        SortMethod.Distance
     );
-    const [filterMethod, setFilterMethod] = useState<FilterMethod>(
-        FilterMethod.Location
-    );
+
+    useEffect(() => {
+        switch (sortMethod) {
+            case SortMethod.Distance: {
+                setLocations(
+                    locations.sort(
+                        (loc1, loc2) => loc1.distance - loc2.distance
+                    )
+                );
+            }
+            case SortMethod.Soonest: {
+                setLocations(
+                    locations.sort(
+                        (loc1, loc2) =>
+                            loc1.time.getTime() - loc2.time.getTime()
+                    )
+                );
+            }
+            case SortMethod.Latest: {
+                setLocations(
+                    locations.sort(
+                        (loc1, loc2) =>
+                            loc2.time.getTime() - loc1.time.getTime()
+                    )
+                );
+            }
+            case SortMethod.Soonest: {
+                setLocations(
+                    locations.sort(
+                        (loc1, loc2) =>
+                            loc1.time.getTime() - loc2.time.getTime()
+                    )
+                );
+            }
+        }
+    }, [sortMethod]);
 
     return (
         <View className="rounded p-3">
@@ -217,37 +246,39 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                     </View>
                 </ScrollView>
             </View>
-            <StyledText className="mb-3">Filter by...</StyledText>
+            <StyledText className="mb-3" weight={FontWeight.SemiBold}>
+                Filter by...
+            </StyledText>
             <View className="flex flex-row gap-3 mb-3 flex-wrap">
                 <Pressable
                     className={`border rounded-full px-3 py-2 ${
-                        filterMethod === FilterMethod.Location
+                        sortMethod === SortMethod.Distance
                             ? "bg-black"
                             : "bg-white"
                     }`}
-                    onPress={() => setFilterMethod(FilterMethod.Location)}
+                    onPress={() => setSortMethod(SortMethod.Distance)}
                 >
                     <StyledText
                         className={`font-semibold ${
-                            filterMethod === FilterMethod.Location
+                            sortMethod === SortMethod.Distance
                                 ? "text-white"
                                 : "text-black"
                         }`}
                     >
-                        Location
+                        Distance
                     </StyledText>
                 </Pressable>
                 <Pressable
                     className={`border rounded-full px-3 py-2 ${
-                        filterMethod === FilterMethod.Soonest
+                        sortMethod === SortMethod.Soonest
                             ? "bg-black"
                             : "bg-white"
                     }`}
-                    onPress={() => setFilterMethod(FilterMethod.Soonest)}
+                    onPress={() => setSortMethod(SortMethod.Soonest)}
                 >
                     <StyledText
                         className={`font-semibold ${
-                            filterMethod === FilterMethod.Soonest
+                            sortMethod === SortMethod.Soonest
                                 ? "text-white"
                                 : "text-black"
                         }`}
@@ -257,56 +288,20 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                 </Pressable>
                 <Pressable
                     className={`border rounded-full px-3 py-2 ${
-                        filterMethod === FilterMethod.Latest
+                        sortMethod === SortMethod.Latest
                             ? "bg-black"
                             : "bg-white"
                     }`}
-                    onPress={() => setFilterMethod(FilterMethod.Latest)}
+                    onPress={() => setSortMethod(SortMethod.Latest)}
                 >
                     <StyledText
                         className={`font-semibold ${
-                            filterMethod === FilterMethod.Latest
+                            sortMethod === SortMethod.Latest
                                 ? "text-white"
                                 : "text-black"
                         }`}
                     >
-                        Soonest
-                    </StyledText>
-                </Pressable>
-                <Pressable
-                    className={`border rounded-full px-3 py-2 ${
-                        filterMethod === FilterMethod.Favourites
-                            ? "bg-black"
-                            : "bg-white"
-                    }`}
-                    onPress={() => setFilterMethod(FilterMethod.Favourites)}
-                >
-                    <StyledText
-                        className={`font-semibold ${
-                            filterMethod === FilterMethod.Favourites
-                                ? "text-white"
-                                : "text-black"
-                        }`}
-                    >
-                        Soonest
-                    </StyledText>
-                </Pressable>
-                <Pressable
-                    className={`border rounded-full px-3 py-2 ${
-                        filterMethod === FilterMethod.Temperature
-                            ? "bg-black"
-                            : "bg-white"
-                    }`}
-                    onPress={() => setFilterMethod(FilterMethod.Temperature)}
-                >
-                    <StyledText
-                        className={`font-semibold ${
-                            filterMethod === FilterMethod.Temperature
-                                ? "text-white"
-                                : "text-black"
-                        }`}
-                    >
-                        Soonest
+                        Latest
                     </StyledText>
                 </Pressable>
             </View>
@@ -317,7 +312,7 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                     <StyledText style={styles.headerCell}>Time</StyledText>
                 </View>
                 <FlatList
-                    data={nearbyLocations}
+                    data={locations}
                     keyExtractor={(item) => item.name}
                     renderItem={({ item }) => (
                         <View style={styles.row}>
@@ -328,7 +323,7 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                                 {item.distance}
                             </StyledText>
                             <StyledText style={styles.cell}>
-                                {item.time}
+                                {item.time.getHours()}:{item.time.getMinutes()}
                             </StyledText>
                         </View>
                     )}

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { WeatherLocationInformation } from "./weather-location-information";
 import { CardType, IOpenedCard } from "../footer";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { FontWeight, StyledText } from "../styled-text";
 import { WeatherConditionInformation } from "./weather-condition-information";
 const cityData = require("../../assets/cities.json");
@@ -76,6 +76,7 @@ export const WeatherContainer: React.FC<IProps> = ({
     setOpenCards,
 }) => {
     const windowWidth = Dimensions.get("window").width;
+    const windowHeight = Dimensions.get("window").height;
     const [searchMethod, setSearchMethod] = useState<CardType>(
         CardType.Location
     );
@@ -119,12 +120,14 @@ export const WeatherContainer: React.FC<IProps> = ({
                 }}
                 className="bg-black opacity-75 w-screen h-screen absolute top-0 left-0"
             />
-            <View
+            <ScrollView
                 style={{
+                    marginTop: 50,
                     width: windowWidth - 20,
+                    height: windowHeight - 50 - 150,
                     transform: "translateX(10px)",
                 }}
-                className="bg-gray-50 rounded mt-24 absolute"
+                className="bg-gray-50 rounded absolute"
             >
                 {!openedCard ? (
                     <View className="rounded p-3">
@@ -203,7 +206,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                         ) : (
                             <FlatList
                                 data={weatherConditionList}
-                                className="rounded max-h-52"
+                                className="rounded max-h-96"
                                 renderItem={({ item }) => (
                                     <ListItem
                                         item={item}
@@ -230,7 +233,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                         setOpenCards={setOpenCards}
                     />
                 )}
-            </View>
+            </ScrollView>
         </View>
     );
 };
