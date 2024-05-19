@@ -92,6 +92,7 @@ export const Footer: React.FC<{
                 <View className="flex-row gap-5 py-3 px-[100]">
                     {props.openTabs.map((curTab: IOpenedCard, index) => (
                         <TabIcon
+                            key={index}
                             tab={curTab}
                             setter={props.setCurCard}
                         ></TabIcon>

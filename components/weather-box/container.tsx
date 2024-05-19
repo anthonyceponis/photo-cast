@@ -9,10 +9,11 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { WeatherInformation } from "./weather-information";
+import { WeatherLocationInformation } from "./weather-location-information";
 import { CardType, IOpenedCard } from "../footer";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontWeight, StyledText } from "../styled-text";
+import { WeatherConditionInformation } from "./weather-condition-information";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -214,8 +215,15 @@ export const WeatherContainer: React.FC<IProps> = ({
                             />
                         )}
                     </View>
+                ) : openedCard.type === CardType.Location ? (
+                    <WeatherLocationInformation
+                        setOpenedCard={setOpenedCard}
+                        city={openedCard.name}
+                        openCards={openCards}
+                        setOpenCards={setOpenCards}
+                    />
                 ) : (
-                    <WeatherInformation
+                    <WeatherConditionInformation
                         setOpenedCard={setOpenedCard}
                         city={openedCard.name}
                         openCards={openCards}
