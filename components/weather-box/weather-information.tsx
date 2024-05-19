@@ -51,8 +51,9 @@ export const WeatherInformation: React.FC<IProps> = ({
     openCards,
     setOpenCards,
     toggleFavourites,
-    favourites,
 }) => {
+
+    // store and toggle city favourites
     const [isFavourite, setIsFavourite] = useState(false);
 
     const toggleFavourite = () => {

@@ -59,21 +59,18 @@ const ListItem = ({
     );
 };
 
+// pre-defined favourites location
 let favouriteLocations = [
     "Cambridge",
     "London",
 ];
 
+// toggle whether a city is a favourite or not
 function toggleFavouriteLocation(location: string): string[] {
     const locationIndex = favouriteLocations.indexOf(location);
-    if (locationIndex === -1) {
-        // If location is not in the list, add it
-        favouriteLocations = [...favouriteLocations, location];
-    } else {
-        // If location is in the list, remove it
-        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
-    }
-    return favouriteLocations;
+    if (locationIndex === -1) { favouriteLocations = [...favouriteLocations, location];
+    } else { favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+    } return favouriteLocations;
 }
 
 interface IProps {
@@ -206,17 +203,14 @@ export const WeatherContainer: React.FC<IProps> = ({
                                         ? "bg-black"
                                         : "bg-white"
                                 }`}
-                                onPress={() =>
-                                    setSearchMethod(CardType.Favourite)
-                                }
-                            >
+
+                                // add search by feavourites option
+                                onPress={() => setSearchMethod(CardType.Favourite) } >
                                 <StyledText
                                     className={`font-semibold ${
                                         searchMethod === CardType.Favourite
                                             ? "text-white"
-                                            : "text-black"
-                                    }`}
-                                >
+                                            : "text-black" }`} >
                                     Favourites
                                 </StyledText>
                             </Pressable>
