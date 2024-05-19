@@ -3,6 +3,14 @@ import {
     faMinus,
     faPlus,
     faSun,
+    faCloudSun,
+    faCloud,
+    faCloudMeatball,
+    faCloudShowersHeavy,
+    faCloudRain,
+    faCloudBolt,
+    faSnowflake,
+    faSmog
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { TouchableOpacity, ScrollView, Text, View } from "react-native";
@@ -12,6 +20,7 @@ import { CardType, IOpenedCard } from "../footer";
 import { getWeatherInfoByName, IWeatherInfo } from "../../scripts/api";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { icon, Icon, IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 function generateRandomIntegers(
     count: number,
@@ -36,19 +45,38 @@ interface IProps {
 const getNextSevenDaysThreeLetterCodes = () => {
     const todayIndex = new Date().getDay();
     const dayCodes = ["SUN","MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    return [...Array(7).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
+    return [...Array(6).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
 };
 
 const getNextSevenDays = () => {
     return [...Array(7).keys()].map((i) => moment().startOf('day').add(12,'hours').add(i, 'days').format('YYYY-MM-DD hh:mm:ss'));   
 }
 
-const dailyWeatherHighs = generateRandomIntegers(7, 0, 30);
-const dailyWeatherLows = generateRandomIntegers(7, 0, 30);
+const dailyWeatherHighs = generateRandomIntegers(6, 0, 30);
+const dailyWeatherLows = generateRandomIntegers(6, 0, 30);
 const hourlyWeather = generateRandomIntegers(24, 0, 30);
 const daysOfWeekCodes = getNextSevenDaysThreeLetterCodes();
-console.log(daysOfWeekCodes);
 const daysOfWeekTimestamps = getNextSevenDays();
+
+const iconMap = new Map<string, IconDefinition>();
+iconMap.set("01d", faSun);
+iconMap.set("02d", faCloudSun);
+iconMap.set("03d", faCloud);
+iconMap.set("04d", faCloudMeatball);
+iconMap.set("09d", faCloudShowersHeavy);
+iconMap.set("10d", faCloudRain);
+iconMap.set("11d", faCloudBolt);
+iconMap.set("13d", faSnowflake);
+iconMap.set("50d", faSmog);
+iconMap.set("01n", faSun);
+iconMap.set("02n", faCloudSun);
+iconMap.set("03n", faCloud);
+iconMap.set("04n", faCloudMeatball);
+iconMap.set("09n", faCloudShowersHeavy);
+iconMap.set("10n", faCloudRain);
+iconMap.set("11n", faCloudBolt);
+iconMap.set("13n", faSnowflake);
+iconMap.set("50n", faSmog);
 
 export const WeatherInformation: React.FC<IProps> = ({
     city,
@@ -142,7 +170,7 @@ export const WeatherInformation: React.FC<IProps> = ({
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
                     <View className="flex-row">
-                        {dailyWeatherHighs.map((degrees, i) => {
+                        {[...Array(6).keys()].map((degrees, i) => {
                             return (
                                 <View
                                     className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
@@ -163,7 +191,7 @@ export const WeatherInformation: React.FC<IProps> = ({
                                     >
                                         {daysOfWeekCodes[i]}
                                     </StyledText>
-                                    <FontAwesomeIcon size={20} icon={faSun} />
+                                    <FontAwesomeIcon size={20} icon={iconMap.get(weatherData.get(daysOfWeekTimestamps[i])?.icon || "01d") || faSun} />
                                     <View>
                                         <StyledText
                                             className="font-light text-center"
@@ -175,9 +203,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                                         </StyledText>
                                         <StyledText className="font-medium text-xs text-gray-400 text-center">
                                             {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
-                                            (weatherData.get(daysOfWeekTimestamps[i])?.feels_like-273.15).toFixed(1):
-                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.feels_like-273.15).toFixed(1):"N/A"}
-                                            °
+                                            (weatherData.get(daysOfWeekTimestamps[i])?.mainDesc):
+                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.mainDesc):"N/A"}
                                         </StyledText>
                                     </View>
                                 </View>
