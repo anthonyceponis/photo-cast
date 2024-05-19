@@ -2,6 +2,8 @@ import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import { StyledText } from "./styled-text";
+import { FadeInView, SlideUp } from "./squareDemo";
 
 export enum CardType {
     Location,
@@ -21,6 +23,7 @@ export const TabIcon: React.FC<{
     setter: React.Dispatch<IOpenedCard>;
 }> = (props) => {
     return (
+        <FadeInView style={{}}>
         <TouchableOpacity
             key={props.tab.name}
             onPress={() => updateCurrentCard(props.setter, props.tab)}
@@ -34,14 +37,15 @@ export const TabIcon: React.FC<{
                 margin: 2,
             }}
         >
-            <Text
+            <StyledText
                 style={{
                     color: "black",
                 }}
             >
                 {props.tab.name}
-            </Text>
+            </StyledText>
         </TouchableOpacity>
+        </FadeInView>
     );
 };
 
