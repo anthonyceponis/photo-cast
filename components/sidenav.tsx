@@ -25,14 +25,14 @@ export function SideNav() {
             <Drawer.Navigator initialRouteName="Home"
         screenOptions={{
             drawerStyle: {
-                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                //backgroundColor: 'rgba(255, 255, 255, 1)',
                 width: 240
             },
             drawerLabelStyle: {
                 fontSize: 18
             },
-            drawerActiveTintColor: "#51a7e0",
-            drawerInactiveTintColor: "#333"
+            //drawerActiveTintColor: "#51a7e0",
+            //drawerInactiveTintColor: "#333"
         }}>
             <Drawer.Screen name="PhotoCast" component={HomeScreen} />
             <Drawer.Screen name="Tips & Tricks" component={TipsScreen} />

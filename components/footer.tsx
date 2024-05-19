@@ -14,8 +14,6 @@ export interface IOpenedCard {
     filters: string;
 }
 
-//export const ClosedTabButton: React.FC<{cardName: string}>
-
 export const Footer: React.FC<{openTabs:Array<IOpenedCard>}> = props => {
     //Map the openCards
     return (

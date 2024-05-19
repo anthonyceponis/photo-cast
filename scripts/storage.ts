@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storeObj = async (key:string, value:any) => 
+export const storeObj = async (key:string, value:any) => 
 {
     try
     {
+
         const jsonVal = JSON.stringify(value);
         await AsyncStorage.setItem(key, jsonVal);
     }
@@ -13,7 +14,7 @@ const storeObj = async (key:string, value:any) =>
     }
 }
 
-const getObj = async (key:string) => 
+export const getObj = async (key:string) => 
 {
     try
     {
@@ -30,12 +31,21 @@ const getObj = async (key:string) =>
 export async function getFavourites() : Promise<Set<string>>
 {
     const favourites = await getObj("favourites");
-    return favourites != null ? favourites : new Set<string>();
+    return favourites != null ? new Set<string>(favourites) : new Set<string>();
 }
 
 export async function storeFavourite(favourite:string)
 {
-    let currentFavourites = await getFavourites();
+    let currentFavourites = new Set<string>(await getObj("favourites"));
+    console.log("poop");
     currentFavourites.add(favourite);
+    console.log("poop");
+    storeObj("favourites", Array.from(currentFavourites));
+}
+
+export async function deleteFavourite(favourite:string)
+{
+    let currentFavourites = await getFavourites();
+    currentFavourites.delete(favourite);
     storeObj("favourites", currentFavourites);
 }
