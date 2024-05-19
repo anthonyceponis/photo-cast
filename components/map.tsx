@@ -8,9 +8,9 @@ export const Map: React.FC<{cardSet: React.Dispatch<IOpenedCard>}> = props => {
 
     const handlePress = async(e) => {
         const { latitude, longitude } = e.nativeEvent.coordinate;
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
         const locationName = String(await getLocationByCoords(latitude, longitude));
-        const card = {name:locationName, type:CardType.Location, filters:""}
+        const card = {name:locationName, type:CardType.Location, filters:"", lat:latitude, lng:longitude}
         props.cardSet(card);
     };
 
