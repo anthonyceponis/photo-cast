@@ -3,11 +3,14 @@ import {
     faMinus,
     faPlus,
     faSun,
+    faStar,
+    faStarHalfAlt
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { TouchableOpacity, ScrollView, Text, View } from "react-native";
 import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
+import React, { useState } from "react";
 
 function generateRandomIntegers(
     count: number,
@@ -27,6 +30,8 @@ interface IProps {
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
+    toggleFavourites: (name: string) => void; 
+    favourites: string[];
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -45,7 +50,16 @@ export const WeatherInformation: React.FC<IProps> = ({
     setOpenedCard,
     openCards,
     setOpenCards,
+    toggleFavourites,
+    favourites,
 }) => {
+    const [isFavourite, setIsFavourite] = useState(false);
+
+    const toggleFavourite = () => {
+        toggleFavourites(city);
+        setIsFavourite(!isFavourite);
+    };
+
     return (
         <View className="rounded p-3">
             <View className="flex-row justify-between">
@@ -80,11 +94,6 @@ export const WeatherInformation: React.FC<IProps> = ({
                         .includes(city) ? (
                         <TouchableOpacity
                             className="p-2 m-1 rounded"
-                            disabled={
-                                !openCards
-                                    .map((card: IOpenedCard) => card.name)
-                                    .includes(city)
-                            }
                             onPress={() => {
                                 setOpenCards(
                                     openCards.filter(
@@ -94,18 +103,17 @@ export const WeatherInformation: React.FC<IProps> = ({
                             }}
                         >
                             <FontAwesomeIcon
-                                color={
-                                    !openCards
-                                        .map((card: IOpenedCard) => card.name)
-                                        .includes(city)
-                                        ? "red"
-                                        : "black"
-                                }
                                 size={20}
                                 icon={faMinus}
                             />
                         </TouchableOpacity>
                     ) : null}
+                    <Pressable
+                        className="p-2 m-1"
+                        onPress={toggleFavourite}
+                    >
+                        <FontAwesomeIcon size={20} icon={isFavourite ? faStar : faStarHalfAlt} />
+                    </Pressable>
                 </View>
             </View>
             <StyledText
@@ -116,7 +124,7 @@ export const WeatherInformation: React.FC<IProps> = ({
                 {city}
             </StyledText>
             <View className="w-32 bg-white aspect-square rounded-full flex justify-center items-center mb-5">
-                <StyledText className="text-3xl font-medium"> 20°C</StyledText>
+                <StyledText className="text-3xl font-medium">20°C</StyledText>
             </View>
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
@@ -124,6 +132,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                         {dailyWeatherHighs.map((degrees, i) => {
                             return (
                                 <View
+                                key={i}
+
                                     className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
                                         i === 0 ? "bg-gray-100" : "bg-white"
                                     }`}
@@ -174,6 +184,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                         {hourlyWeather.map((degrees, i) => {
                             return (
                                 <View
+                                key={i}
+
                                     className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
                                         i === 0 ? "bg-gray-100" : "bg-white"
                                     }`}

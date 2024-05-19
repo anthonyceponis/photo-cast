@@ -6,7 +6,6 @@ import {
     FlatList,
     Keyboard,
     Pressable,
-    Text,
     TextInput,
     View,
 } from "react-native";
@@ -60,6 +59,23 @@ const ListItem = ({
     );
 };
 
+let favouriteLocations = [
+    "Cambridge",
+    "London",
+];
+
+function toggleFavouriteLocation(location: string): string[] {
+    const locationIndex = favouriteLocations.indexOf(location);
+    if (locationIndex === -1) {
+        // If location is not in the list, add it
+        favouriteLocations = [...favouriteLocations, location];
+    } else {
+        // If location is in the list, remove it
+        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+    }
+    return favouriteLocations;
+}
+
 interface IProps {
     setIsOpen: React.Dispatch<boolean>;
     openedCard: IOpenedCard | null;
@@ -85,6 +101,7 @@ export const WeatherContainer: React.FC<IProps> = ({
     );
     const [weatherConditionList, setWeatherConditionList] =
         useState(allWeatherConditions);
+    const [filteredFavourites, setFilteredFavourites] = useState<string[]>(favouriteLocations);
 
     useEffect(() => {
         if (openedCard !== null) setIsOpen(true);
@@ -99,16 +116,21 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city.toLowerCase().includes(searchQuery.toLowerCase())
                     )
                     .sort()
-                // .slice(0, 10)
             );
-        } else {
+        } else if (searchMethod === CardType.Condition) {
             setWeatherConditionList(
                 allWeatherConditions.filter((condition) =>
                     condition.includes(searchQuery)
                 )
             );
+        } else if (searchMethod === CardType.Favourite) {
+            setFilteredFavourites(
+                favouriteLocations.filter((location) =>
+                    location.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            );
         }
-    }, [searchQuery]);
+    }, [searchQuery, searchMethod]);
 
     return (
         <View className="h-screen w-screen relative">
@@ -170,12 +192,32 @@ export const WeatherContainer: React.FC<IProps> = ({
                             >
                                 <StyledText
                                     className={`font-semibold ${
-                                        searchMethod === CardType.Location
-                                            ? "text-black"
-                                            : "text-white"
+                                        searchMethod === CardType.Condition
+                                            ? "text-white"
+                                            : "text-black"
                                     }`}
                                 >
                                     Condition
+                                </StyledText>
+                            </Pressable>
+                            <Pressable
+                                className={`border rounded-full px-3 py-2 ${
+                                    searchMethod === CardType.Favourite
+                                        ? "bg-black"
+                                        : "bg-white"
+                                }`}
+                                onPress={() =>
+                                    setSearchMethod(CardType.Favourite)
+                                }
+                            >
+                                <StyledText
+                                    className={`font-semibold ${
+                                        searchMethod === CardType.Favourite
+                                            ? "text-white"
+                                            : "text-black"
+                                    }`}
+                                >
+                                    Favourites
                                 </StyledText>
                             </Pressable>
                         </View>
@@ -200,7 +242,7 @@ export const WeatherContainer: React.FC<IProps> = ({
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
                             />
-                        ) : (
+                        ) : searchMethod === CardType.Condition ? (
                             <FlatList
                                 data={weatherConditionList}
                                 className="rounded max-h-52"
@@ -208,6 +250,19 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     <ListItem
                                         item={item}
                                         cardType={CardType.Condition}
+                                        setOpenedCard={setOpenedCard}
+                                    />
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        ) : (
+                            <FlatList
+                                data={filteredFavourites}
+                                className="rounded max-h-52"
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        item={item}
+                                        cardType={CardType.Favourite}
                                         setOpenedCard={setOpenedCard}
                                     />
                                 )}
@@ -221,9 +276,12 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city={openedCard.name}
                         openCards={openCards}
                         setOpenCards={setOpenCards}
+                        toggleFavourites={toggleFavouriteLocation}
+                        favourites={favouriteLocations}
                     />
                 )}
             </View>
         </View>
     );
 };
+

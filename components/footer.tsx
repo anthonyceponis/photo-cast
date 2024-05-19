@@ -7,6 +7,7 @@ import { StyledText } from "./styled-text";
 export enum CardType {
     Location,
     Condition,
+    Favourite,
 }
 
 export interface IOpenedCard {

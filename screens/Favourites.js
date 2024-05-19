@@ -1,5 +1,7 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet,
+    Pressable, Button
+ } from 'react-native';
+ import Icon from 'react-native-vector-icons/Ionicons'
 
 export function FavouritesScreen() {
   const favorites = [
@@ -19,6 +21,7 @@ export function FavouritesScreen() {
             <Icon name={favorite.icon} size={24} color="black" style={styles.icon} />
           </TouchableOpacity>
         ))}
+
       </View>
     </ImageBackground>
   );
