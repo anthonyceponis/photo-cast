@@ -93,37 +93,6 @@ const fetchLat = async (url:string) => {
   }
 }
 
-export function getFirstN_NearbyLocations(lat: number, lng:number, num:number)
-{
-  try{
-    const locations = getNearbyLocations(lat, lng).slice(0, num+1);
-    console.log(locations)
-    return locations;
-    }catch(error)
-    {
-      console.error("Cannot get nearby locations: ", error);
-      return null;
-    }
-}
-
-export const getNearbyLocationsWithCondition = async (lat: number, lng:number, condition:String) =>
-{
-  const nearLocations = getFirstN_NearbyLocations(lat, lng, 5);
-  console.log(nearLocations[0].city)
-  const meetingConditions = [];
-  for(let i = 0; i < 5; i++)
-    {
-      const curCondition = await fetchMainDescription(`https://api.openweathermap.org/data/2.5/weather?q=${nearLocations[i].city}&appid=${apiKey}`); 
-      console.log(curCondition);
-      if(curCondition == condition)
-        {
-          meetingConditions.push(nearLocations[i])
-          console.log(nearLocations[i].city)
-        }
-    }
-    console.log("Here");
-    return meetingConditions;
-}
 
 const cityData = require("../assets/cities.json");
 

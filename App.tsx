@@ -1,12 +1,4 @@
-import {
-    Pressable,
-    SafeAreaView,
-    ActivityIndicatorBase,
-    Button,
-    Text,
-    View,
-} from "react-native";
-import { Nav } from "./components/nav";
+import { Pressable, Button, View } from "react-native";
 import { Footer } from "./components/footer";
 import { Map } from "./components/map";
 
@@ -25,14 +17,15 @@ import {
 } from "./scripts/calculations";
 import moment from 'moment';
 import { NavigationContainer } from "@react-navigation/native";
-import { SideNav } from "./components/sidenav";
 import {
     FadeInView,
     SlideInView,
     ISlidePositions,
 } from "./components/squareDemo";
 
-import { IOpenedCard, CardType } from "./components/footer";
+import { SideNav } from "./components/sidenav";
+
+import { IOpenedCard } from "./components/footer";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -40,7 +33,6 @@ export function HomeScreen() {
     // to add more info from API
 
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
-    const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
 
     const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
     const [openedCard, setOpenedCard] = useState<IOpenedCard | null>(null); //Currently opened card
@@ -106,10 +98,6 @@ export function HomeScreen() {
                 positions={{ startX: 800, startY: 0, endX: 0, endY: 0 }}
                 prompt={isSideNavOpen}
             >
-                <Pressable onPress={() => setWeatherBoxOpen(true)}>
-                    <FontAwesomeIcon icon={faSearch} />
-                </Pressable>
-
                 <WeatherContainer
                     setIsOpen={setIsSideNavOpen}
                     openedCard={openedCard}

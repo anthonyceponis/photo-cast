@@ -10,7 +10,43 @@ import {
     Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 
-export const StyledText: React.FC<TextProps> = ({
+export enum FontWeight {
+    Thin,
+    ExtraLight,
+    Light,
+    Regular,
+    Medium,
+    SemiBold,
+    Bold,
+}
+
+interface IProps extends TextProps {
+    weight?: FontWeight;
+}
+
+const renderFontWeight = (fontWeight: FontWeight) => {
+    switch (fontWeight) {
+        case FontWeight.Thin:
+            return "MontserratThin";
+        case FontWeight.ExtraLight:
+            return "MontserratExtraLight";
+        case FontWeight.Light:
+            return "MontserratLight";
+        case FontWeight.Regular:
+            return "MontserratRegular";
+        case FontWeight.Medium:
+            return "MontserratMedium";
+        case FontWeight.SemiBold:
+            return "MontserratSemiBold";
+        case FontWeight.Bold:
+            return "MontserratBold";
+        default:
+            return "";
+    }
+};
+
+export const StyledText: React.FC<IProps> = ({
+    weight = FontWeight.Regular,
     children,
     style,
     ...rest
@@ -30,7 +66,7 @@ export const StyledText: React.FC<TextProps> = ({
             style={[
                 style,
                 {
-                    fontFamily: "Montserrat",
+                    fontFamily: renderFontWeight(weight),
                 },
             ]}
             {...rest}
