@@ -12,7 +12,7 @@ import {
 import { WeatherInformation } from "./weather-information";
 import { CardType, IOpenedCard } from "../footer";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { StyledText } from "../styled-text";
+import { FontWeight, StyledText } from "../styled-text";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {

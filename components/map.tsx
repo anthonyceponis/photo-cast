@@ -1,11 +1,17 @@
+import React from "react";
 import { Text, View, Dimensions, StyleSheet } from "react-native";
 import MapView from "react-native-maps";
+import { CardType, IOpenedCard } from "./footer";
+import { getLocationByCoords } from "../scripts/api";
 
-export const Map = () => {
+export const Map: React.FC<{cardSet: React.Dispatch<IOpenedCard>}> = props => {
 
-    const handlePress = (e) => {
+    const handlePress = async(e) => {
         const { latitude, longitude } = e.nativeEvent.coordinate;
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        const locationName = String(await getLocationByCoords(latitude, longitude));
+        const card = {name:locationName, type:CardType.Location, filters:""}
+        props.cardSet(card);
     };
 
     const onRegionChange = (e) => {
