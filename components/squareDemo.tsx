@@ -124,7 +124,7 @@ export const SlideInView: React.FC<SlideInViewProps> = props => {
     //This will cause the useEffects above to call and these will recursively call as these update the slideAnim variables
     //Which then trigger themselves again etc... Until they no longer change => reached their end position.
 
-    console.log(props.positions.endX);
+    //console.log(props.positions.endX);
   }, [props.prompt])
   //Is called when the prompt variable changes (a bool attatched to the button, essentiall on/off)
 

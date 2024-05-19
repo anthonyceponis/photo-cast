@@ -3,6 +3,8 @@ import {
     faMinus,
     faPlus,
     faSun,
+    faStar,
+    faStarHalfAlt,
     faCloudSun,
     faCloud,
     faCloudMeatball,
@@ -16,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { TouchableOpacity, ScrollView, Text, View } from "react-native";
 import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
+import { Pressable } from "react-native";
 
 import { getWeatherInfoByName, IWeatherInfo } from "../../scripts/api";
 import { useEffect, useState } from "react";
@@ -40,6 +43,9 @@ interface IProps {
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
+    toggleFavourites: (name: string) => void; 
+    favourites: string[];
+    currentOpenedCard:IOpenedCard;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -83,7 +89,17 @@ export const WeatherInformation: React.FC<IProps> = ({
     setOpenedCard,
     openCards,
     setOpenCards,
+    toggleFavourites,
+    favourites,
+    currentOpenedCard
 }) => {
+    const [isFavourite, setIsFavourite] = useState(false);
+
+    const toggleFavourite = () => {
+        toggleFavourites(city);
+        setIsFavourite(!isFavourite);
+    };
+
 
     const [weatherData, setWeatherData] = useState<Map<string,IWeatherInfo>>(new Map<string,IWeatherInfo>());
     const [weatherTimestamps, setWeatherTimestamps] = useState<string[]>([]);
@@ -119,6 +135,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                                         type: CardType.Location,
                                         name: city,
                                         filters: "",
+                                        lat:currentOpenedCard.lat,
+                                        lng:currentOpenedCard.lng
                                     },
                                 ]);
                             }}
@@ -145,18 +163,17 @@ export const WeatherInformation: React.FC<IProps> = ({
                             }}
                         >
                             <FontAwesomeIcon
-                                color={
-                                    !openCards
-                                        .map((card: IOpenedCard) => card.name)
-                                        .includes(city)
-                                        ? "red"
-                                        : "black"
-                                }
                                 size={20}
                                 icon={faMinus}
                             />
                         </TouchableOpacity>
                     ) : null}
+                    <Pressable
+                        className="p-2 m-1"
+                        onPress={toggleFavourite}
+                    >
+                        <FontAwesomeIcon size={20} icon={isFavourite ? faStar : faStarHalfAlt} />
+                    </Pressable>
                 </View>
             </View>
             <StyledText
@@ -198,8 +215,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                                             style={{ fontSize: 17 }}
                                         >
                                             {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
-                                            (weatherData.get(daysOfWeekTimestamps[i])?.temperature-273.15).toFixed(1):
-                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.temperature-273.15).toFixed(1):"N/A"}°
+                                            ((weatherData.get(daysOfWeekTimestamps[i])?.temperature || 293.15)-273.15).toFixed(1):
+                                            i==0 ? ((weatherData.get(weatherTimestamps[0])?.temperature || 293.15)-273.15).toFixed(1):"N/A"}°
                                         </StyledText>
                                         <StyledText className="font-medium text-xs text-gray-400 text-center">
                                             {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?

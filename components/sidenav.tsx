@@ -4,6 +4,7 @@ import { SettingsScreen } from "../screens/Settings";
 import { FavouritesScreen } from "../screens/Favourites";
 import { HomeScreen } from "../App";
 import { NavigationContainer } from "@react-navigation/native";
+import { IOpenedCard } from "./footer";
 
 const Drawer = createDrawerNavigator();
 

@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { getFavourites, deleteFavourite, storeFavourite } from '../scripts/storage';
-import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet,
+    Pressable, Button
+ } from 'react-native';
+ import Icon from 'react-native-vector-icons/Ionicons'
 
 export function FavouritesScreen() {
 
@@ -14,24 +14,20 @@ export function FavouritesScreen() {
         setFavorites((Array.from(await getFavourites())).map(favorite => ({ location: favorite, icon: 'location' })));
     }
 
-    return (
-        <ImageBackground source={require('./favouritesbg.jpeg')} style={styles.backgroundImage}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Favourite Locations</Text>
-                {favorites.map((favorite, index) => (
-                    <View style = {styles.row}>
-                        <TouchableOpacity key={"fav"+index} style={styles.favoriteItem} onPress={() => handleFavoritePress(favorite)}>
-                            <Text>{favorite.name}</Text>
-                            <Icon name={favorite.icon} size={24} color="black" style={styles.icon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity key={"trash"+index} style = {styles.trash} onPress={() => handleDeletePress(favorite)}>
-                            <Icon name="trash" size={24} color="black" style={styles.trashIcon} />
-                        </TouchableOpacity>
-                    </View>
-                ))}
-            </View>
-        </ImageBackground>
-    );
+  return (
+    <ImageBackground source={require('./favouritesbg.jpeg')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Favourite Locations</Text>
+        {favorites.map((favorite, index) => (
+          <TouchableOpacity key={index} style={styles.favoriteItem} onPress={() => handleFavoritePress(favorite)}>
+            <Text>{favorite.name}</Text>
+            <Icon name={favorite.icon} size={24} color="black" style={styles.icon} />
+          </TouchableOpacity>
+        ))}
+
+      </View>
+    </ImageBackground>
+  );
 };
 
 
@@ -45,8 +41,8 @@ const handleDeletePress = (favorite) => {
 }
 
 const handleFavoritePress = (favorite) => {
-    // Handle press action
-    console.log(`Pressed ${favorite.name}`);
+  // Handle press action
+  //console.log(`Pressed ${favorite.name}`);
 };
 
 const styles = StyleSheet.create({
