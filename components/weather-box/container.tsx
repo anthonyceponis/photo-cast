@@ -6,7 +6,6 @@ import {
     FlatList,
     Keyboard,
     Pressable,
-    Text,
     TextInput,
     View,
 } from "react-native";
@@ -14,6 +13,7 @@ import { WeatherInformation } from "./weather-information";
 import { CardType, IOpenedCard } from "../footer";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontWeight, StyledText } from "../styled-text";
+import { getListedLocationCoords } from "../../scripts/api";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -40,22 +40,35 @@ const allWeatherConditions = [
 ];
 
 const ListItemCity = ({
-    item,
+    itemIn,
     cardType,
     setOpenedCard
 }: {
-    item: ICity;
+    itemIn: String;
     cardType: CardType;
     setOpenedCard: React.Dispatch<IOpenedCard>;
 }) => {
+    //console.log(typeof(itemIn))
+    var latlng = getListedLocationCoords(String(itemIn));
+    var lat = 0;
+    var lng = 0;
+    if(latlng != null)
+    {
+        lat = parseFloat(latlng[0]);
+        lng = parseFloat(latlng[1]);
+    }else{
+        lat = 0;
+        lng = 0;
+    }
+    console.log(lng)
     return (
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
             onPress={() => {
-                setOpenedCard({ type: cardType, name: String(item.city), filters: "", lat:parseFloat(String(item.lat)), lng:parseFloat(String(item.lng)) });
+                setOpenedCard({ type: cardType, name: String(itemIn), filters: "", lat:lat, lng:lng });
             }}
         >
-            <StyledText>{item.city}</StyledText>
+            <StyledText>{itemIn}</StyledText>
         </TouchableOpacity>
     );
 };
@@ -69,6 +82,7 @@ const ListItem = ({
     cardType: CardType;
     setOpenedCard: React.Dispatch<IOpenedCard>;
 }) => {
+    
     return (
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
@@ -80,6 +94,23 @@ const ListItem = ({
         </TouchableOpacity>
     );
 };
+
+let favouriteLocations = [
+    "Cambridge",
+    "London",
+];
+
+function toggleFavouriteLocation(location: string): string[] {
+    const locationIndex = favouriteLocations.indexOf(location);
+    if (locationIndex === -1) {
+        // If location is not in the list, add it
+        favouriteLocations = [...favouriteLocations, location];
+    } else {
+        // If location is in the list, remove it
+        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+    }
+    return favouriteLocations;
+}
 
 interface IProps {
     setIsOpen: React.Dispatch<boolean>;
@@ -101,11 +132,13 @@ export const WeatherContainer: React.FC<IProps> = ({
         CardType.Location
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [cityList, setCityList] = useState( cityData.data );
-       // cityData.map((city: ICity) => city.city.toLowerCase())
-    //);
+    const [cityList, setCityList] = useState(
+        cityData.map((city: ICity) => city.city.toLowerCase())
+    );
+    //console.log("Cities:" + String(cityData[0].city));
     const [weatherConditionList, setWeatherConditionList] =
         useState(allWeatherConditions);
+    const [filteredFavourites, setFilteredFavourites] = useState<string[]>(favouriteLocations);
 
     useEffect(() => {
         if (openedCard !== null) setIsOpen(true);
@@ -120,16 +153,21 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city.toLowerCase().includes(searchQuery.toLowerCase())
                     )
                     .sort()
-                // .slice(0, 10)
             );
-        } else {
+        } else if (searchMethod === CardType.Condition) {
             setWeatherConditionList(
                 allWeatherConditions.filter((condition) =>
                     condition.includes(searchQuery)
                 )
             );
+        } else if (searchMethod === CardType.Favourite) {
+            setFilteredFavourites(
+                favouriteLocations.filter((location) =>
+                    location.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            );
         }
-    }, [searchQuery]);
+    }, [searchQuery, searchMethod]);
 
     return (
         <View className="h-screen w-screen relative">
@@ -191,12 +229,32 @@ export const WeatherContainer: React.FC<IProps> = ({
                             >
                                 <StyledText
                                     className={`font-semibold ${
-                                        searchMethod === CardType.Location
-                                            ? "text-black"
-                                            : "text-white"
+                                        searchMethod === CardType.Condition
+                                            ? "text-white"
+                                            : "text-black"
                                     }`}
                                 >
                                     Condition
+                                </StyledText>
+                            </Pressable>
+                            <Pressable
+                                className={`border rounded-full px-3 py-2 ${
+                                    searchMethod === CardType.Favourite
+                                        ? "bg-black"
+                                        : "bg-white"
+                                }`}
+                                onPress={() =>
+                                    setSearchMethod(CardType.Favourite)
+                                }
+                            >
+                                <StyledText
+                                    className={`font-semibold ${
+                                        searchMethod === CardType.Favourite
+                                            ? "text-white"
+                                            : "text-black"
+                                    }`}
+                                >
+                                    Favourites
                                 </StyledText>
                             </Pressable>
                         </View>
@@ -213,15 +271,15 @@ export const WeatherContainer: React.FC<IProps> = ({
                                 data={cityList}
                                 className="rounded max-h-96"
                                 renderItem={({ item }) => (
-                                    <ListItem
-                                        item={item}
+                                    <ListItemCity
+                                        itemIn={item}
                                         cardType={CardType.Location}
                                         setOpenedCard={setOpenedCard}
                                     />
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
                             />
-                        ) : (
+                        ) : searchMethod === CardType.Condition ? (
                             <FlatList
                                 data={weatherConditionList}
                                 className="rounded max-h-52"
@@ -229,6 +287,19 @@ export const WeatherContainer: React.FC<IProps> = ({
                                     <ListItem
                                         item={item}
                                         cardType={CardType.Condition}
+                                        setOpenedCard={setOpenedCard}
+                                    />
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        ) : (
+                            <FlatList
+                                data={filteredFavourites}
+                                className="rounded max-h-52"
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        item={item}
+                                        cardType={CardType.Favourite}
                                         setOpenedCard={setOpenedCard}
                                     />
                                 )}
@@ -242,9 +313,13 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city={openedCard.name}
                         openCards={openCards}
                         setOpenCards={setOpenCards}
+                        toggleFavourites={toggleFavouriteLocation}
+                        favourites={favouriteLocations}
+                        currentOpenedCard={openedCard}
                     />
                 )}
             </View>
         </View>
     );
 };
+

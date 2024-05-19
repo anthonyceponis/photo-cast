@@ -33,7 +33,7 @@ export function HomeScreen() {
                     title="search"
                     onPress={() => {
                         setIsSideNavOpen(!isSideNavOpen);
-                        console.log(isSideNavOpen);
+                        //console.log(isSideNavOpen);
                     }}
                 />
             </SlideInView>

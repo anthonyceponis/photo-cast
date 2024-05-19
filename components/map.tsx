@@ -16,7 +16,7 @@ export const Map: React.FC<{cardSet: React.Dispatch<IOpenedCard>}> = props => {
 
     const onRegionChange = (e) => {
 
-        console.log(`Latitude: ${e.latitude}, Longitude: ${e.longitude}`);
+        //console.log(`Latitude: ${e.latitude}, Longitude: ${e.longitude}`);
       }
     return (
         <View>

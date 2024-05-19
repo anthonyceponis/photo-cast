@@ -8,6 +8,7 @@ import { FadeInView } from "./squareDemo";
 export enum CardType {
     Location,
     Condition,
+    Favourite,
 }
 
 export interface IOpenedCard {
@@ -28,7 +29,7 @@ export const TabIcon: React.FC<{
         <FadeInView style={{}}>
         <TouchableOpacity
             key={props.tab.name}
-            onPress={() => updateCurrentCard(props.setter, props.tab)}
+            onPress={() => {updateCurrentCard(props.setter, props.tab); console.log(props.tab.lat)}}
             style={{
                 width: 80,
                 height: 40,
@@ -55,7 +56,7 @@ function updateCurrentCard(
     setCurrentCard: React.Dispatch<IOpenedCard>,
     cardData: IOpenedCard
 ) {
-    console.log(cardData);
+    //console.log(cardData);
     setCurrentCard(cardData);
 }
 

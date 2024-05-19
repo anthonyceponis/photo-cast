@@ -3,11 +3,15 @@ import {
     faMinus,
     faPlus,
     faSun,
+    faStar,
+    faStarHalfAlt
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { TouchableOpacity, ScrollView, Text, View } from "react-native";
 import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
+import React, { useState } from "react";
+import { Pressable } from "react-native";
 
 function generateRandomIntegers(
     count: number,
@@ -27,6 +31,9 @@ interface IProps {
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
+    toggleFavourites: (name: string) => void; 
+    favourites: string[];
+    currentOpenedCard:IOpenedCard;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -45,7 +52,17 @@ export const WeatherInformation: React.FC<IProps> = ({
     setOpenedCard,
     openCards,
     setOpenCards,
+    toggleFavourites,
+    favourites,
+    currentOpenedCard
 }) => {
+    const [isFavourite, setIsFavourite] = useState(false);
+
+    const toggleFavourite = () => {
+        toggleFavourites(city);
+        setIsFavourite(!isFavourite);
+    };
+
     return (
         <View className="rounded p-3">
             <View className="flex-row justify-between">
@@ -68,6 +85,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                                         type: CardType.Location,
                                         name: city,
                                         filters: "",
+                                        lat:currentOpenedCard.lat,
+                                        lng:currentOpenedCard.lng
                                     },
                                 ]);
                             }}
@@ -94,18 +113,17 @@ export const WeatherInformation: React.FC<IProps> = ({
                             }}
                         >
                             <FontAwesomeIcon
-                                color={
-                                    !openCards
-                                        .map((card: IOpenedCard) => card.name)
-                                        .includes(city)
-                                        ? "red"
-                                        : "black"
-                                }
                                 size={20}
                                 icon={faMinus}
                             />
                         </TouchableOpacity>
                     ) : null}
+                    <Pressable
+                        className="p-2 m-1"
+                        onPress={toggleFavourite}
+                    >
+                        <FontAwesomeIcon size={20} icon={isFavourite ? faStar : faStarHalfAlt} />
+                    </Pressable>
                 </View>
             </View>
             <StyledText
@@ -116,7 +134,7 @@ export const WeatherInformation: React.FC<IProps> = ({
                 {city}
             </StyledText>
             <View className="w-32 bg-white aspect-square rounded-full flex justify-center items-center mb-5">
-                <StyledText className="text-3xl font-medium"> 20°C</StyledText>
+                <StyledText className="text-3xl font-medium">20°C</StyledText>
             </View>
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>

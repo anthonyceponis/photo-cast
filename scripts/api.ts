@@ -144,6 +144,19 @@ export const getLocationByCoords = async(lat:number, lng:number) =>
   return(locations[0].name);
 }
 
+export function getListedLocationCoords(locationName:string)
+{
+  const locs = cityData;
+  for(let i = 0; i < Object.keys(locs).length; i++)
+    {
+      if(locs[i].city == locationName)
+        {
+          return [locs[i].lat, locs[i].lng]
+        }
+    }
+    return null;
+}
+
 const cityData = require("../assets/cities.json");
 
 export function getNearbyLocations(ourLat:number, ourLng:number)

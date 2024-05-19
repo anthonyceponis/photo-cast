@@ -4,17 +4,18 @@ import { SettingsScreen } from "../screens/Settings";
 import { FavouritesScreen } from "../screens/Favourites";
 import { HomeScreen } from "../App";
 import { NavigationContainer } from "@react-navigation/native";
+import { IOpenedCard } from "./footer";
 
 const Drawer = createDrawerNavigator();
 
 export function SideNav() {
     return (
         <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home"
+            <Drawer.Navigator initialRouteName="Home"
         screenOptions={{
-            headerShown: true,
+            swipeEdgeWidth: 0,
             drawerStyle: {
-                backgroundColor: "#",
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
                 width: 240
             },
             drawerLabelStyle: {
