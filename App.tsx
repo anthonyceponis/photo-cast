@@ -32,7 +32,7 @@ import {
     ISlidePositions,
 } from "./components/squareDemo";
 
-import { IOpenedCard } from "./components/footer";
+import { IOpenedCard, CardType } from "./components/footer";
 
 export function HomeScreen() {
     // Create state variables for storing different weather information
@@ -43,12 +43,31 @@ export function HomeScreen() {
     const [weatherBoxOpen, setWeatherBoxOpen] = useState<boolean>(false);
 
     const [openTabs, setOpenTabs] = useState<Array<IOpenedCard>>([]); //List of all tabs
-    const [openedCard, setOpenedCard] = useState<IOpenedCard>(); //Currently opened card
+    const [openedCard, setOpenedCard] = useState<IOpenedCard | null>(null); //Currently opened card
 
     // Call API for weather data
     useEffect(() => {
         const fetchData = async () => {
-            console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
+            setName(await currentWeather.getWeatherInfoByName("london").name);
+            setTemperature(
+                await currentWeather.getWeatherInfoByName("london").temperature
+            );
+            setDescription(
+                await currentWeather.getWeatherInfoByName("london").description
+            );
+            setLong(await currentWeather.getWeatherInfoByName("london").long);
+            setLat(await currentWeather.getWeatherInfoByName("london").lat);
+
+            //console.log(currentWeather.getNearbyLocationsWithCondition(52.2053, 0.1192, "Clouds"))
+
+            //Adding some test tabs
+            let conditionTab1 = {type: CardType.Condition, name:"Golden Hour", filters:"Favourites"};
+            let locationTab1 = {type: CardType.Location, name:"Barnsley", filters:""};
+            let locationTab2 = {type: CardType.Location, name:"Sheffield", filters:""};
+            let locationTab3 = {type: CardType.Location, name:"Doncaster", filters:""};
+            let locationTab4 = {type: CardType.Location, name:"Rotherham", filters:""};
+            let locationTab5 = {type: CardType.Location, name:"Leeds", filters:""};
+            setOpenTabs([conditionTab1, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5, locationTab1, locationTab2, locationTab3, locationTab4, locationTab5,]);
         };
         fetchData();
     }, []);
@@ -91,10 +110,16 @@ export function HomeScreen() {
                     <FontAwesomeIcon icon={faSearch} />
                 </Pressable>
 
-                <WeatherContainer setIsOpen={setIsSideNavOpen} />
+                <WeatherContainer
+                    setIsOpen={setIsSideNavOpen}
+                    openedCard={openedCard}
+                    setOpenedCard={setOpenedCard}
+                    openCards={openTabs}
+                    setOpenCards={setOpenTabs}
+                />
             </SlideInView>
 
-            <Footer openTabs={openTabs}/>
+            <Footer openTabs={openTabs} setCurCard={setOpenedCard}/>
         </View>
     );
 }

@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { useState, useEffect } from "react";
+import { Text, TouchableOpacity, View, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 
@@ -16,36 +16,87 @@ export interface IOpenedCard {
 
 //export const ClosedTabButton: React.FC<{cardName: string}>
 
-export const Footer: React.FC<{openTabs:Array<IOpenedCard>}> = props => {
+export const TabIcon: React.FC<{
+    tab: IOpenedCard;
+    setter: React.Dispatch<IOpenedCard>;
+}> = (props) => {
+    return (
+        <TouchableOpacity
+            key={props.tab.name}
+            onPress={() => updateCurrentCard(props.setter, props.tab)}
+            style={{
+                width: 80,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: "white",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: 2,
+            }}
+        >
+            <Text
+                style={{
+                    color: "black",
+                }}
+            >
+                {props.tab.name}
+            </Text>
+        </TouchableOpacity>
+    );
+};
+
+function updateCurrentCard(
+    setCurrentCard: React.Dispatch<IOpenedCard>,
+    cardData: IOpenedCard
+) {
+    console.log(cardData);
+    setCurrentCard(cardData);
+}
+
+export const Footer: React.FC<{
+    openTabs: Array<IOpenedCard>;
+    setCurCard: React.Dispatch<IOpenedCard>;
+}> = (props) => {
     //Map the openCards
     return (
-        <View className="absolute bottom-0 flex justify-center items-center bg-amber-50 w-screen p-3 border-offset-2 border-t-2 border-zinc-800">
-            <View className="flex-row gap-5">
-                {[1, 2, 3].map((tab, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                            backgroundColor: "#fff7ed",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            margin: 2,
-                            borderColor:"#27272a", borderWidth:1, shadowColor:"#000"
-                        }}
-                        className={"shadow-sm"}
-                    >
-                        <Text
-                            style={{
-                                color: "black",
-                            }}
-                        >
-                            {tab}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+        //<View className="absolute bottom-0 flex justify-center items-center bg-black w-screen py-3 h-[100] overflow-hidden">
+        <View
+            style={{
+                position: "absolute",
+                bottom: 0,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "black",
+                width: "50%",
+                paddingHorizontal: 400,
+                paddingVertical: 10,
+                height: 100,
+                zIndex: 5,
+            }}
+        >
+            <ScrollView
+                horizontal={true}
+                style={{
+                    marginHorizontal: 100,
+                    marginVertical: 0,
+                    flex: 1,
+                    width: 500,
+                    height: 800,
+                    paddingVertical: 20,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    transform: [{ translateX: 0 }, { translateY: -10 }],
+                }}
+            >
+                <View className="flex-row gap-5 py-3 px-[100]">
+                    {props.openTabs.map((curTab: IOpenedCard, index) => (
+                        <TabIcon
+                            tab={curTab}
+                            setter={props.setCurCard}
+                        ></TabIcon>
+                    ))}
+                </View>
+            </ScrollView>
         </View>
     );
 };
