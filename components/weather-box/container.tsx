@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import {
     Dimensions,
     FlatList,
+    Keyboard,
     Pressable,
     Text,
     TextInput,
     View,
 } from "react-native";
 import { WeatherInformation } from "./weather-information";
+import { CardType, IOpenedCard } from "../footer";
 const cityData = require("../../assets/cities.json");
 
 export interface ICity {
@@ -22,11 +24,6 @@ export interface ICity {
     capital: String;
     population: String;
     population_proper: String;
-}
-
-enum SearchMethods {
-    Location,
-    Condition,
 }
 
 const allWeatherConditions = [
@@ -42,19 +39,18 @@ const allWeatherConditions = [
 
 const ListItem = ({
     item,
-    setShowSerachScreen,
-    setConditionOrLocation,
+    cardType,
+    setOpenedCard,
 }: {
     item: string;
-    setShowSerachScreen: React.Dispatch<boolean>;
-    setConditionOrLocation: React.Dispatch<string>;
+    cardType: CardType;
+    setOpenedCard: React.Dispatch<IOpenedCard>;
 }) => {
     return (
         <Pressable
             className="bg-white text-black p-3 border-b border-gray-400"
             onPress={() => {
-                setShowSerachScreen(false);
-                setConditionOrLocation(item);
+                setOpenedCard({ type: cardType, name: item, filters: "" });
             }}
         >
             <Text>{item}</Text>
@@ -64,17 +60,24 @@ const ListItem = ({
 
 interface IProps {
     setIsOpen: React.Dispatch<boolean>;
+    openedCard: IOpenedCard | null;
+    setOpenedCard: React.Dispatch<IOpenedCard | null>;
+    openCards: IOpenedCard[];
+    setOpenCards: React.Dispatch<IOpenedCard[]>;
 }
 
-export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
+export const WeatherContainer: React.FC<IProps> = ({
+    setIsOpen,
+    openedCard,
+    setOpenedCard,
+    openCards,
+    setOpenCards,
+}) => {
     const windowWidth = Dimensions.get("window").width;
-    const [searchMethod, setSearchMethod] = useState<SearchMethods>(
-        SearchMethods.Location
+    const [searchMethod, setSearchMethod] = useState<CardType>(
+        CardType.Location
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [showSearchScreen, setShowSearchScreen] = useState<boolean>(false);
-    const [selectedLocation, setSelectedLocation] = useState<string>("");
-    const [selectedCondition, setSelectedCondition] = useState<string>("");
     const [cityList, setCityList] = useState(
         cityData.map((city: ICity) => city.city.toLowerCase())
     );
@@ -82,7 +85,11 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
         useState(allWeatherConditions);
 
     useEffect(() => {
-        if (searchMethod === SearchMethods.Location) {
+        if (openedCard !== null) setIsOpen(true);
+    }, [openedCard]);
+
+    useEffect(() => {
+        if (searchMethod === CardType.Location) {
             setCityList(
                 cityData
                     .map((city: ICity) => city.city)
@@ -107,29 +114,29 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                 style={{ width: windowWidth - 20 }}
                 className="bg-white rounded mx-auto mt-24"
             >
-                {showSearchScreen ? (
+                {!openedCard ? (
                     <View className="bg-white rounded p-3">
                         <Pressable
                             className="text-right flex-row justify-end"
-                            onPress={() => setIsOpen(false)}
-                        >
+                            onPress={() => {setIsOpen(false); Keyboard.dismiss()}}
+                        > 
                             <FontAwesomeIcon size={25} icon={faXmark} />
                         </Pressable>
                         <Text className="font-semibold mb-2">Search by...</Text>
                         <View className="flex flex-row gap-3 mb-3">
                             <Pressable
                                 className={`border rounded-full px-3 py-2 ${
-                                    searchMethod === SearchMethods.Location
+                                    searchMethod === CardType.Location
                                         ? "bg-black"
                                         : "bg-white"
                                 }`}
                                 onPress={() =>
-                                    setSearchMethod(SearchMethods.Location)
+                                    setSearchMethod(CardType.Location)
                                 }
                             >
                                 <Text
                                     className={`font-semibold ${
-                                        searchMethod === SearchMethods.Location
+                                        searchMethod === CardType.Location
                                             ? "text-white"
                                             : "text-black"
                                     }`}
@@ -139,17 +146,17 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                             </Pressable>
                             <Pressable
                                 className={`border rounded-full px-3 py-2 ${
-                                    searchMethod === SearchMethods.Condition
+                                    searchMethod === CardType.Condition
                                         ? "bg-black"
                                         : "bg-white"
                                 }`}
                                 onPress={() =>
-                                    setSearchMethod(SearchMethods.Condition)
+                                    setSearchMethod(CardType.Condition)
                                 }
                             >
                                 <Text
                                     className={`font-semibold ${
-                                        searchMethod === SearchMethods.Location
+                                        searchMethod === CardType.Location
                                             ? "text-black"
                                             : "text-white"
                                     }`}
@@ -165,19 +172,15 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                                 setSearchQuery(value)
                             }
                         />
-                        {searchMethod === SearchMethods.Location ? (
+                        {searchMethod === CardType.Location ? (
                             <FlatList
                                 data={cityList}
                                 className="rounded max-h-96"
                                 renderItem={({ item }) => (
                                     <ListItem
                                         item={item}
-                                        setShowSerachScreen={
-                                            setShowSearchScreen
-                                        }
-                                        setConditionOrLocation={
-                                            setSelectedLocation
-                                        }
+                                        cardType={CardType.Location}
+                                        setOpenedCard={setOpenedCard}
                                     />
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
@@ -189,12 +192,8 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                                 renderItem={({ item }) => (
                                     <ListItem
                                         item={item}
-                                        setShowSerachScreen={
-                                            setShowSearchScreen
-                                        }
-                                        setConditionOrLocation={
-                                            setSelectedLocation
-                                        }
+                                        cardType={CardType.Condition}
+                                        setOpenedCard={setOpenedCard}
                                     />
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
@@ -203,8 +202,10 @@ export const WeatherContainer: React.FC<IProps> = ({ setIsOpen }) => {
                     </View>
                 ) : (
                     <WeatherInformation
-                        setShowSearchScreen={setShowSearchScreen}
-                        city={selectedLocation}
+                        setOpenedCard={setOpenedCard}
+                        city={openedCard.name}
+                        openCards={openCards}
+                        setOpenCards={setOpenCards}
                     />
                 )}
             </View>

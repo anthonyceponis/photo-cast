@@ -1,7 +1,13 @@
-import { faArrowLeft, faSun } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowLeft,
+    faMinus,
+    faPlus,
+    faSun,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { StyledText } from "../styled-text";
+import { CardType, IOpenedCard } from "../footer";
 
 function generateRandomIntegers(
     count: number,
@@ -18,7 +24,9 @@ function generateRandomIntegers(
 
 interface IProps {
     city: string;
-    setShowSearchScreen: React.Dispatch<boolean>;
+    setOpenedCard: React.Dispatch<IOpenedCard | null>;
+    openCards: IOpenedCard[];
+    setOpenCards: React.Dispatch<IOpenedCard[]>;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -34,16 +42,72 @@ const daysOfWeek = getNextSevenDaysThreeLetterCodes();
 
 export const WeatherInformation: React.FC<IProps> = ({
     city,
-    setShowSearchScreen,
+    setOpenedCard,
+    openCards,
+    setOpenCards,
 }) => {
     return (
         <View className="bg-white rounded p-3">
-            <Pressable
-                className="p-2 m-1"
-                onPress={() => setShowSearchScreen(true)}
-            >
-                <FontAwesomeIcon size={20} icon={faArrowLeft} />
-            </Pressable>
+            <View className="flex-row justify-between">
+                <Pressable
+                    className="p-2 m-1"
+                    onPress={() => setOpenedCard(null)}
+                >
+                    <FontAwesomeIcon size={20} icon={faArrowLeft} />
+                </Pressable>
+                <View className="flex-row">
+                    {!openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1"
+                            onPress={() => {
+                                setOpenCards([
+                                    ...openCards,
+                                    {
+                                        type: CardType.Location,
+                                        name: city,
+                                        filters: "",
+                                    },
+                                ]);
+                            }}
+                        >
+                            <FontAwesomeIcon size={20} icon={faPlus} />
+                        </Pressable>
+                    ) : null}
+                    {openCards
+                        .map((card: IOpenedCard) => card.name)
+                        .includes(city) ? (
+                        <Pressable
+                            className="p-2 m-1 bg-gray-200 rounded"
+                            disabled={
+                                !openCards
+                                    .map((card: IOpenedCard) => card.name)
+                                    .includes(city)
+                            }
+                            onPress={() => {
+                                setOpenCards(
+                                    openCards.filter(
+                                        (card) => card.name !== city
+                                    )
+                                );
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                color={
+                                    !openCards
+                                        .map((card: IOpenedCard) => card.name)
+                                        .includes(city)
+                                        ? "red"
+                                        : "black"
+                                }
+                                size={20}
+                                icon={faMinus}
+                            />
+                        </Pressable>
+                    ) : null}
+                </View>
+            </View>
             <StyledText className="text-black font-semibold mt-3 mb-5 text-center text-3xl">
                 {city}
             </StyledText>
