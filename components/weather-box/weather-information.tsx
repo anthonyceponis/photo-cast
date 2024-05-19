@@ -183,7 +183,7 @@ export const WeatherInformation: React.FC<IProps> = ({
             >
                 {city}
             </StyledText>
-                <StyledText className="text-xl font-medium text-center mb-5"> 20°C</StyledText>
+                <StyledText className="text-xl font-medium text-center mb-5"> {((weatherData.get(weatherTimestamps[0])?.temperature || 293.15)-273.15).toFixed(1)}°C</StyledText>
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
                     <View className="flex-row">

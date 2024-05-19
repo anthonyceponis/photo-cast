@@ -1,7 +1,9 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet,
+import {
+    View, Text, TouchableOpacity, ImageBackground, StyleSheet,
     Pressable, Button
- } from 'react-native';
- import Icon from 'react-native-vector-icons/Ionicons'
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'
+import React, { useState, useEffect } from 'react';
 
 export function FavouritesScreen() {
 
@@ -9,25 +11,25 @@ export function FavouritesScreen() {
     useEffect(() => {
         loadFavourites();
     }, []);
-    
+
     const loadFavourites = async () => {
         setFavorites((Array.from(await getFavourites())).map(favorite => ({ location: favorite, icon: 'location' })));
     }
 
-  return (
-    <ImageBackground source={require('./favouritesbg.jpeg')} style={styles.backgroundImage}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Favourite Locations</Text>
-        {favorites.map((favorite, index) => (
-          <TouchableOpacity key={index} style={styles.favoriteItem} onPress={() => handleFavoritePress(favorite)}>
-            <Text>{favorite.name}</Text>
-            <Icon name={favorite.icon} size={24} color="black" style={styles.icon} />
-          </TouchableOpacity>
-        ))}
+    return (
+        <ImageBackground source={require('./favouritesbg.jpeg')} style={styles.backgroundImage}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Favourite Locations</Text>
+                {favorites.map((favorite, index) => (
+                    <TouchableOpacity key={index} style={styles.favoriteItem} onPress={() => handleFavoritePress(favorite)}>
+                        <Text>{favorite.name}</Text>
+                        <Icon name={favorite.icon} size={24} color="black" style={styles.icon} />
+                    </TouchableOpacity>
+                ))}
 
-      </View>
-    </ImageBackground>
-  );
+            </View>
+        </ImageBackground>
+    );
 };
 
 
@@ -41,8 +43,8 @@ const handleDeletePress = (favorite) => {
 }
 
 const handleFavoritePress = (favorite) => {
-  // Handle press action
-  //console.log(`Pressed ${favorite.name}`);
+    // Handle press action
+    //console.log(`Pressed ${favorite.name}`);
 };
 
 const styles = StyleSheet.create({
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: 10,
-        margin:5
+        margin: 5
     },
     icon: {
         marginLeft: 10,

@@ -21,7 +21,7 @@ export async function getWeatherInfoByName(city: string): Promise<Map<string,IWe
 
 export interface IWeatherInfo {
     name: string,
-    temperature: string,
+    temperature: number,
     feels_like:number,
     description: string,
     long: number,
@@ -103,11 +103,11 @@ interface IReverseResponse {
     country: string
 }
 export const getLocationByCoords = async (lat: number, lng: number) => {
-    console.log("Getting location by coords");
+    //console.log("Getting location by coords");
     const urlReverse = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lng}&limit=${1}&appid=${apiKey}`;
     const response = await axios.get(urlReverse);
     const locations = response.data;
-    console.log(locations[0]);
+    //console.log(locations[0]);
     return (locations[0].name);
 }
 
@@ -134,7 +134,7 @@ export function getNearbyLocations(ourLat: number, ourLng: number) {
                     const distA = Math.pow(ourLat - parseFloat(String(a.lat)), 2) + Math.pow(ourLng - parseFloat(String(a.lng)), 2)
                     const distB = Math.pow(ourLat - parseFloat(String(b.lat)), 2) + Math.pow(ourLng - parseFloat(String(b.lng)), 2)
                     if (a.city == "Cambridge") {
-                        console.log(Math.pow(ourLat - parseFloat(String(a.lat)), 2) + Math.pow(ourLng - parseFloat(String(a.lat)), 2))
+                        // console.log(Math.pow(ourLat - parseFloat(String(a.lat)), 2) + Math.pow(ourLng - parseFloat(String(a.lat)), 2))
                     }
                     if (distA > distB) {
                         return 1;
@@ -154,7 +154,7 @@ export function getNearbyLocations(ourLat: number, ourLng: number) {
 export function getFirstN_NearbyLocations(lat: number, lng: number, num: number) {
     try {
         const locations = getNearbyLocations(lat, lng).slice(0, num + 1);
-        console.log(locations)
+        // console.log(locations)
         return locations;
     } catch (error) {
         console.error("Cannot get nearby locations: ", error);
@@ -164,16 +164,16 @@ export function getFirstN_NearbyLocations(lat: number, lng: number, num: number)
 
 export const getNearbyLocationsWithCondition = async (lat: number, lng: number, condition: String) => {
     const nearLocations = getFirstN_NearbyLocations(lat, lng, 5);
-    console.log(nearLocations[0].city)
+    // console.log(nearLocations[0].city)
     const meetingConditions = [];
     for (let i = 0; i < 5; i++) {
         const curCondition = await fetchMainDescription(`https://api.openweathermap.org/data/2.5/weather?q=${nearLocations[i].city}&appid=${apiKey}`);
-        console.log(curCondition);
+        // console.log(curCondition);
         if (curCondition == condition) {
             meetingConditions.push(nearLocations[i])
-            console.log(nearLocations[i].city)
+            // console.log(nearLocations[i].city)
         }
     }
-    console.log("Here");
+    // console.log("Here");
     return meetingConditions;
 }
