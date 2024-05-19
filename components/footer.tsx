@@ -14,6 +14,8 @@ export interface IOpenedCard {
     type: CardType;
     name: string;
     filters: string;
+    lat:number;
+    lng:number;
 }
 
 export const TabIcon: React.FC<{

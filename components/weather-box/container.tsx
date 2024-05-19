@@ -39,10 +39,31 @@ const allWeatherConditions = [
     "Cloudy",
 ];
 
+const ListItemCity = ({
+    item,
+    cardType,
+    setOpenedCard
+}: {
+    item: ICity;
+    cardType: CardType;
+    setOpenedCard: React.Dispatch<IOpenedCard>;
+}) => {
+    return (
+        <TouchableOpacity
+            className="bg-white text-black p-3 border-b border-gray-200"
+            onPress={() => {
+                setOpenedCard({ type: cardType, name: String(item.city), filters: "", lat:parseFloat(String(item.lat)), lng:parseFloat(String(item.lng)) });
+            }}
+        >
+            <StyledText>{item.city}</StyledText>
+        </TouchableOpacity>
+    );
+};
+
 const ListItem = ({
     item,
     cardType,
-    setOpenedCard,
+    setOpenedCard
 }: {
     item: string;
     cardType: CardType;
@@ -52,7 +73,7 @@ const ListItem = ({
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
             onPress={() => {
-                setOpenedCard({ type: cardType, name: item, filters: "" });
+                setOpenedCard({ type: cardType, name: item, filters: "", lat:0, lng:0 });
             }}
         >
             <StyledText>{item}</StyledText>
@@ -80,9 +101,9 @@ export const WeatherContainer: React.FC<IProps> = ({
         CardType.Location
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [cityList, setCityList] = useState(
-        cityData.map((city: ICity) => city.city.toLowerCase())
-    );
+    const [cityList, setCityList] = useState( cityData.data );
+       // cityData.map((city: ICity) => city.city.toLowerCase())
+    //);
     const [weatherConditionList, setWeatherConditionList] =
         useState(allWeatherConditions);
 
