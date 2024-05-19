@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { StyledText } from "./styled-text";
-import { FadeInView, SlideUp } from "./squareDemo";
+import { FadeInView } from "./squareDemo";
 
 export enum CardType {
     Location,
@@ -15,8 +15,6 @@ export interface IOpenedCard {
     name: string;
     filters: string;
 }
-
-//export const ClosedTabButton: React.FC<{cardName: string}>
 
 export const TabIcon: React.FC<{
     tab: IOpenedCard;

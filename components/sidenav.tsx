@@ -24,6 +24,7 @@ export function SideNav() {
         <NavigationContainer theme={navTheme}>
             <Drawer.Navigator initialRouteName="Home"
         screenOptions={{
+            swipeEdgeWidth: 0,
             drawerStyle: {
                 //backgroundColor: 'rgba(255, 255, 255, 1)',
                 width: 240

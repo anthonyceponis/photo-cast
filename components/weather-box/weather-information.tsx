@@ -9,6 +9,10 @@ import { TouchableOpacity, ScrollView, Text, View } from "react-native";
 import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
 
+import { getWeatherInfoByName, IWeatherInfo } from "../../scripts/api";
+import { useEffect, useState } from "react";
+import moment from "moment";
+
 function generateRandomIntegers(
     count: number,
     min: number,
@@ -31,14 +35,20 @@ interface IProps {
 
 const getNextSevenDaysThreeLetterCodes = () => {
     const todayIndex = new Date().getDay();
-    const dayCodes = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-    return [...Array(7).keys()].map((i) => dayCodes[(i - 1 + todayIndex) % 7]);
+    const dayCodes = ["SUN","MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    return [...Array(7).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
 };
+
+const getNextSevenDays = () => {
+    return [...Array(7).keys()].map((i) => moment().startOf('day').add(12,'hours').add(i, 'days').format('YYYY-MM-DD hh:mm:ss'));   
+}
 
 const dailyWeatherHighs = generateRandomIntegers(7, 0, 30);
 const dailyWeatherLows = generateRandomIntegers(7, 0, 30);
 const hourlyWeather = generateRandomIntegers(24, 0, 30);
-const daysOfWeek = getNextSevenDaysThreeLetterCodes();
+const daysOfWeekCodes = getNextSevenDaysThreeLetterCodes();
+console.log(daysOfWeekCodes);
+const daysOfWeekTimestamps = getNextSevenDays();
 
 export const WeatherInformation: React.FC<IProps> = ({
     city,
@@ -46,6 +56,19 @@ export const WeatherInformation: React.FC<IProps> = ({
     openCards,
     setOpenCards,
 }) => {
+
+    const [weatherData, setWeatherData] = useState<Map<string,IWeatherInfo>>(new Map<string,IWeatherInfo>());
+    const [weatherTimestamps, setWeatherTimestamps] = useState<string[]>([]);
+
+    useEffect(() => {
+        getWeatherInfoByName(city).then((data) => {
+            setWeatherData(data);
+            let timestamps = Array.from(data.keys());
+            setWeatherTimestamps(timestamps.sort((a,b) => moment(a).valueOf()-moment(b).valueOf()));
+        });
+        
+    },[]);
+
     return (
         <View className="rounded p-3">
             <View className="flex-row justify-between">
@@ -115,9 +138,7 @@ export const WeatherInformation: React.FC<IProps> = ({
             >
                 {city}
             </StyledText>
-            <View className="w-32 bg-white aspect-square rounded-full flex justify-center items-center mb-5">
-                <StyledText className="text-3xl font-medium"> 20°C</StyledText>
-            </View>
+                <StyledText className="text-xl font-medium text-center mb-5"> 20°C</StyledText>
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
                     <View className="flex-row">
@@ -136,11 +157,11 @@ export const WeatherInformation: React.FC<IProps> = ({
                                         }
                                         className={`font-medium ${
                                             i === 0
-                                                ? "text-black font-semibold"
+                                                ? "text-black"
                                                 : "text-gray-400"
                                         }`}
                                     >
-                                        {daysOfWeek[i]}
+                                        {daysOfWeekCodes[i]}
                                     </StyledText>
                                     <FontAwesomeIcon size={20} icon={faSun} />
                                     <View>
@@ -148,17 +169,14 @@ export const WeatherInformation: React.FC<IProps> = ({
                                             className="font-light text-center"
                                             style={{ fontSize: 17 }}
                                         >
-                                            {Math.max(
-                                                degrees,
-                                                dailyWeatherLows[i]
-                                            )}
-                                            °
+                                            {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
+                                            (weatherData.get(daysOfWeekTimestamps[i])?.temperature-273.15).toFixed(1):
+                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.temperature-273.15).toFixed(1):"N/A"}°
                                         </StyledText>
                                         <StyledText className="font-medium text-xs text-gray-400 text-center">
-                                            {Math.min(
-                                                degrees,
-                                                dailyWeatherLows[i]
-                                            )}
+                                            {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
+                                            (weatherData.get(daysOfWeekTimestamps[i])?.feels_like-273.15).toFixed(1):
+                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.feels_like-273.15).toFixed(1):"N/A"}
                                             °
                                         </StyledText>
                                     </View>
