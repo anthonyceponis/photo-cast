@@ -15,7 +15,7 @@ import {
     faSmog
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { TouchableOpacity, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity, ScrollView, FlatList, View, StyleSheet } from "react-native";
 import { FontWeight, StyledText } from "../styled-text";
 import { CardType, IOpenedCard } from "../footer";
 import { Pressable } from "react-native";
@@ -51,7 +51,7 @@ interface IProps {
 const getNextSevenDaysThreeLetterCodes = () => {
     const todayIndex = new Date().getDay();
     const dayCodes = ["SUN","MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    return [...Array(6).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
+    return [...Array(5).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
 };
 
 const getNextSevenDays = () => {
@@ -60,7 +60,7 @@ const getNextSevenDays = () => {
 
 const dailyWeatherHighs = generateRandomIntegers(6, 0, 30);
 const dailyWeatherLows = generateRandomIntegers(6, 0, 30);
-const hourlyWeather = generateRandomIntegers(24, 0, 30);
+//const hourlyWeather = generateRandomIntegers(24, 0, 30);
 const daysOfWeekCodes = getNextSevenDaysThreeLetterCodes();
 const daysOfWeekTimestamps = getNextSevenDays();
 
@@ -84,6 +84,29 @@ iconMap.set("11n", faCloudBolt);
 iconMap.set("13n", faSnowflake);
 iconMap.set("50n", faSmog);
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: "#fff",
+    },
+    row: {
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+        paddingVertical: 8,
+    },
+    headerCell: {
+        flex: 1,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    cell: {
+        flex: 1,
+        textAlign: "center",
+    },
+});
+
 export const WeatherLocationInformation: React.FC<IProps> = ({
     city,
     setOpenedCard,
@@ -103,6 +126,7 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
 
     const [weatherData, setWeatherData] = useState<Map<string,IWeatherInfo>>(new Map<string,IWeatherInfo>());
     const [weatherTimestamps, setWeatherTimestamps] = useState<string[]>([]);
+    const [selectedDay, setSelectedDay] = useState<string>(moment().format('YYYY-MM-DD'));
 
     useEffect(() => {
         getWeatherInfoByName(city).then((data) => {
@@ -187,21 +211,24 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
                     <View className="flex-row">
-                        {[...Array(6).keys()].map((degrees, i) => {
+                        {[...Array(5).keys()].map((i) => {
                             return (
-                                <View
+                                <TouchableOpacity
                                     className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
-                                        i === 0 ? "bg-gray-100" : "bg-white"
+                                        selectedDay === moment().add(i, "days").format("YYYY-MM-DD") ? "bg-gray-100" : "bg-white"
                                     }`}
+                                    onPress={() => {
+                                        setSelectedDay(moment(daysOfWeekTimestamps[i]).format('YYYY-MM-DD'));
+                                    }}
                                 >
                                     <StyledText
                                         weight={
-                                            i === 0
+                                            selectedDay === moment().add(i, "days").format("YYYY-MM-DD")
                                                 ? FontWeight.SemiBold
                                                 : FontWeight.Regular
                                         }
                                         className={`font-medium ${
-                                            i === 0
+                                            selectedDay === moment().add(i, "days").format("YYYY-MM-DD")
                                                 ? "text-black"
                                                 : "text-gray-400"
                                         }`}
@@ -224,7 +251,7 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
                                             i==0 ? (weatherData.get(weatherTimestamps[0])?.mainDesc):"N/A"}
                                         </StyledText>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             );
                         })}
                     </View>
@@ -233,39 +260,59 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView horizontal={true} className="mx-3">
                     <View className="flex-row">
-                        {hourlyWeather.map((degrees, i) => {
+                        {weatherTimestamps.filter((data) => moment(data).format("YYYY-MM-DD")===selectedDay).map((timestamp, i) => {
                             return (
                                 <View
                                     className={`flex justify-center items-center rounded gap-y-3 px-3 py-2 mx-2 ${
-                                        i === 0 ? "bg-gray-100" : "bg-white"
+                                        "bg-white"//i === 0 ? "bg-gray-100" : "bg-white"
                                     }`}
                                 >
                                     <StyledText
                                         weight={
-                                            i === 0
-                                                ? FontWeight.SemiBold
-                                                : FontWeight.Regular
+                                            FontWeight.SemiBold
                                         }
-                                        className={`font-semibold ${
-                                            i === 0
-                                                ? "text-black"
-                                                : "text-gray-400"
+                                        className={`font-semibold ${"text-black"
                                         }`}
                                     >
-                                        {(i + new Date().getHours()) % 24}
+                                        {moment(timestamp).format("HH:mm")}
                                     </StyledText>
                                     <View className="flex-row gap-x-1">
                                         <FontAwesomeIcon
                                             size={20}
-                                            icon={faSun}
+                                            icon={iconMap.get(weatherData.get(timestamp)?.icon || "01d") || faSun}
                                         />
-                                        <StyledText>{degrees}°</StyledText>
+                                        <StyledText>{((weatherData.get(timestamp)?.temperature || 293.15)-273.15).toFixed(1)}°</StyledText>
                                     </View>
                                 </View>
                             );
                         })}
                     </View>
                 </ScrollView>
+            </View>
+            <View style={styles.container}>
+                <View style={styles.row}>
+                    <StyledText style={styles.headerCell}>Condition</StyledText>
+                    <StyledText style={styles.headerCell}>Time</StyledText>
+                </View>
+                <FlatList
+                    data={[{name:"Morning BH Start", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.morningBHstart, "hour").format("HH:mm") || "N/A"},
+                        {name:"Sunrise", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.sunriseTime, "hour").format("HH:mm") || "N/A"},
+                        {name:"Morning GH End", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.morningGHend, "hour").format("HH:mm") || "N/A"},
+                        {name:"Evening GH Start", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.eveningGHstart, "hour").format("HH:mm") || "N/A"},
+                        {name:"Sunset", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.sunsetTime, "hour").format("HH:mm") || "N/A"},
+                        {name:"Evening BH End", time:moment(selectedDay).add(weatherData.get(moment(selectedDay).format("YYYY-MM-DD hh:mm:ss"))?.eveningBHend, "hour").format("HH:mm") || "N/A"}]}
+                    keyExtractor={(item) => item.name}
+                    renderItem={({ item }) => (
+                        <View style={styles.row}>
+                            <StyledText style={styles.cell}>
+                                {item.name}
+                            </StyledText>
+                            <StyledText style={styles.cell}>
+                                {item.time}
+                            </StyledText>
+                        </View>
+                    )}
+                />
             </View>
         </View>
     );
