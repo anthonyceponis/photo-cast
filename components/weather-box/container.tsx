@@ -42,7 +42,7 @@ const allWeatherConditions = [
     "Snow",
     "Drizzle",
     "Thunderstorm",
-    "Clear"
+    "Clear",
 ];
 
 const ListItemCity = ({
@@ -110,17 +110,18 @@ const ListItem = ({
     );
 };
 
-let favouriteLocations = [
-    "Cambridge",
-    "London",
-];
-
+let favouriteLocations = ["Cambridge", "London"];
 
 function toggleFavouriteLocation(location: string): string[] {
     const locationIndex = favouriteLocations.indexOf(location);
-    if (locationIndex === -1) { favouriteLocations = [...favouriteLocations, location];
-    } else { favouriteLocations = favouriteLocations.filter(loc => loc !== location);
-    } return favouriteLocations;
+    if (locationIndex === -1) {
+        favouriteLocations = [...favouriteLocations, location];
+    } else {
+        favouriteLocations = favouriteLocations.filter(
+            (loc) => loc !== location
+        );
+    }
+    return favouriteLocations;
 }
 
 interface IProps {
@@ -154,7 +155,7 @@ export const WeatherContainer: React.FC<IProps> = ({
         useState<string[]>(favouriteLocations);
 
     useEffect(() => {
-        console.log("openedCard "+openedCard)
+        console.log("openedCard " + openedCard);
         if (openedCard !== null) setIsOpen(true);
     }, [openedCard]);
 
@@ -286,32 +287,48 @@ export const WeatherContainer: React.FC<IProps> = ({
                             }
                         />
                         {searchMethod === CardType.Location ? (
-                            <FlatList
-                                data={cityList}
-                                className="rounded max-h-96"
-                                renderItem={({ item }) => (
-                                    <ListItemCity
-                                        itemIn={item}
-                                        cardType={CardType.Location}
-                                        setOpenedCard={setOpenedCard}
-                                    />
-                                )}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
+                            cityList.length > 0 ? (
+                                <FlatList
+                                    data={cityList}
+                                    className="rounded max-h-96"
+                                    renderItem={({ item }) => (
+                                        <ListItemCity
+                                            itemIn={item}
+                                            cardType={CardType.Location}
+                                            setOpenedCard={setOpenedCard}
+                                        />
+                                    )}
+                                    keyExtractor={(item, index) =>
+                                        index.toString()
+                                    }
+                                />
+                            ) : (
+                                <StyledText className="text-red-400">
+                                    No city found...
+                                </StyledText>
+                            )
                         ) : searchMethod === CardType.Condition ? (
-                            <FlatList
-                                data={weatherConditionList}
-                                className="rounded max-h-96"
-                                renderItem={({ item }) => (
-                                    <ListItem
-                                        item={item}
-                                        cardType={CardType.Condition}
-                                        setOpenedCard={setOpenedCard}
-                                    />
-                                )}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        ) : (
+                            weatherConditionList.length > 0 ? (
+                                <FlatList
+                                    data={weatherConditionList}
+                                    className="rounded max-h-96"
+                                    renderItem={({ item }) => (
+                                        <ListItem
+                                            item={item}
+                                            cardType={CardType.Condition}
+                                            setOpenedCard={setOpenedCard}
+                                        />
+                                    )}
+                                    keyExtractor={(item, index) =>
+                                        index.toString()
+                                    }
+                                />
+                            ) : (
+                                <StyledText className="text-red-600">
+                                    No condition found
+                                </StyledText>
+                            )
+                        ) : favouriteLocations.length > 0 ? (
                             <FlatList
                                 data={favouriteLocations}
                                 className="rounded max-h-52"
@@ -324,6 +341,10 @@ export const WeatherContainer: React.FC<IProps> = ({
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
                             />
+                        ) : (
+                            <StyledText className="text-red-600">
+                                No location found
+                            </StyledText>
                         )}
                     </View>
                 ) : openedCard.type === CardType.Location ? (
