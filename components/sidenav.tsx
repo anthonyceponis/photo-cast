@@ -80,7 +80,6 @@ export const SideNav: React.FC = () => {
                     }}
                 />
                 <Drawer.Screen name="Tips & Tricks" component={TipsScreen} />
-                <Drawer.Screen name="Favourites" component={FavouritesScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
