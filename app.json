@@ -28,11 +28,6 @@
         "favicon": "./assets/favicon.png"
       },
       "package": "com.bambezius.photocast"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "1c096624-2e14-42ac-9c42-0c89e1f8e4bf"
-      }
     }
   }
 }

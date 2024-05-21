@@ -1,3 +1,4 @@
+//imports
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { FontWeight, StyledText } from "../styled-text";
@@ -13,11 +14,7 @@ import { useEffect, useState } from "react";
 import { getLocationByCoords, getNearbyLocationsWithCondition } from "../../scripts/api";
 import { ICity } from "./container";
 
-function generateRandomIntegers(
-    count: number,
-    min: number,
-    max: number
-): number[] {
+function generateRandomIntegers(count: number, min: number, max: number): number[] {
     const randomIntegers: number[] = [];
     for (let i = 0; i < count; i++) {
         const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -26,14 +23,21 @@ function generateRandomIntegers(
     return randomIntegers;
 }
 
+// interface for props to a weather condition info window
 interface IProps {
     city: string;
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
-    toggleFavourites: (name: string) => void; 
+    toggleFavourites: (name: string) => void;
     favourites: string[];
-    currentOpenedCard:IOpenedCard;
+    currentOpenedCard: IOpenedCard;
+}
+
+interface ILocations {
+    name: string;
+    distance: number;
+    time: Date;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
@@ -46,11 +50,6 @@ const dailyWeatherHighs = generateRandomIntegers(7, 0, 30);
 const dailyWeatherLows = generateRandomIntegers(7, 0, 30);
 const daysOfWeek = getNextSevenDaysThreeLetterCodes();
 
-interface ILocations {
-    name: string;
-    distance: number;
-    time: Date;
-}
 
 var locationsDefault: ILocations[] = [
     { name: " ", distance: 0, time: new Date() },
@@ -103,8 +102,7 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
     useEffect(() => {
         switch (sortMethod) {
             case SortMethod.Distance: {
-                getNearbyLocationsWithCondition(52.2, 0.13, currentOpenedCard.name).then((data) => 
-                {
+                getNearbyLocationsWithCondition(52.2, 0.13, currentOpenedCard.name).then((data) => {
                     setLocations(data);
                 }
                 );
@@ -158,8 +156,8 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                                         type: CardType.Location,
                                         name: city,
                                         filters: "",
-                                        lat:currentOpenedCard.lat,
-                                        lng:currentOpenedCard.lng
+                                        lat: currentOpenedCard.lat,
+                                        lng: currentOpenedCard.lng
                                     },
                                 ]);
                             }}
@@ -213,9 +211,8 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                         {dailyWeatherHighs.map((degrees, i) => {
                             return (
                                 <View
-                                    className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${
-                                        i === 0 ? "bg-gray-100" : "bg-white"
-                                    }`}
+                                    className={`flex justify-center items-center gap-y-3 px-3 py-2 mx-2 rounded ${i === 0 ? "bg-gray-100" : "bg-white"
+                                        }`}
                                 >
                                     <StyledText
                                         weight={
@@ -223,11 +220,10 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
                                                 ? FontWeight.SemiBold
                                                 : FontWeight.Regular
                                         }
-                                        className={`font-medium ${
-                                            i === 0
+                                        className={`font-medium ${i === 0
                                                 ? "text-black font-semibold"
                                                 : "text-gray-400"
-                                        }`}
+                                            }`}
                                     >
                                         {daysOfWeek[i]}
                                     </StyledText>
@@ -262,55 +258,49 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
             </StyledText>
             <View className="flex flex-row gap-3 mb-3 flex-wrap">
                 <Pressable
-                    className={`border rounded-full px-3 py-2 ${
-                        sortMethod === SortMethod.Distance
+                    className={`border rounded-full px-3 py-2 ${sortMethod === SortMethod.Distance
                             ? "bg-black"
                             : "bg-white"
-                    }`}
+                        }`}
                     onPress={() => setSortMethod(SortMethod.Distance)}
                 >
                     <StyledText
-                        className={`font-semibold ${
-                            sortMethod === SortMethod.Distance
+                        className={`font-semibold ${sortMethod === SortMethod.Distance
                                 ? "text-white"
                                 : "text-black"
-                        }`}
+                            }`}
                     >
                         Distance
                     </StyledText>
                 </Pressable>
                 <Pressable
-                    className={`border rounded-full px-3 py-2 ${
-                        sortMethod === SortMethod.Soonest
+                    className={`border rounded-full px-3 py-2 ${sortMethod === SortMethod.Soonest
                             ? "bg-black"
                             : "bg-white"
-                    }`}
+                        }`}
                     onPress={() => setSortMethod(SortMethod.Soonest)}
                 >
                     <StyledText
-                        className={`font-semibold ${
-                            sortMethod === SortMethod.Soonest
+                        className={`font-semibold ${sortMethod === SortMethod.Soonest
                                 ? "text-white"
                                 : "text-black"
-                        }`}
+                            }`}
                     >
                         Soonest
                     </StyledText>
                 </Pressable>
                 <Pressable
-                    className={`border rounded-full px-3 py-2 ${
-                        sortMethod === SortMethod.Latest
+                    className={`border rounded-full px-3 py-2 ${sortMethod === SortMethod.Latest
                             ? "bg-black"
                             : "bg-white"
-                    }`}
+                        }`}
                     onPress={() => setSortMethod(SortMethod.Latest)}
                 >
                     <StyledText
-                        className={`font-semibold ${
-                            sortMethod === SortMethod.Latest
+                        className={`font-semibold ${sortMethod === SortMethod.Latest
                                 ? "text-white"
                                 : "text-black"
-                        }`}
+                            }`}
                     >
                         Latest
                     </StyledText>
