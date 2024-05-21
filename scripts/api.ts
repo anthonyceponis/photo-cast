@@ -163,10 +163,10 @@ export function getFirstN_NearbyLocations(lat: number, lng: number, num: number)
 }
 
 export const getNearbyLocationsWithCondition = async (lat: number, lng: number, condition: String) => {
-    const nearLocations = getFirstN_NearbyLocations(lat, lng, 5);
+    const nearLocations = getFirstN_NearbyLocations(lat, lng, 15);
     // console.log(nearLocations[0].city)
     const meetingConditions = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 15; i++) {
         const curCondition = await fetchMainDescription(`https://api.openweathermap.org/data/2.5/weather?q=${nearLocations[i].city}&appid=${apiKey}`);
         console.log(curCondition);
         if (curCondition == condition) {
