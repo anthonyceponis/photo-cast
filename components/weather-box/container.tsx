@@ -101,16 +101,12 @@ let favouriteLocations = [
     "London",
 ];
 
+
 function toggleFavouriteLocation(location: string): string[] {
     const locationIndex = favouriteLocations.indexOf(location);
-    if (locationIndex === -1) {
-        // If location is not in the list, add it
-        favouriteLocations = [...favouriteLocations, location];
-    } else {
-        // If location is in the list, remove it
-        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
-    }
-    return favouriteLocations;
+    if (locationIndex === -1) { favouriteLocations = [...favouriteLocations, location];
+    } else { favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+    } return favouriteLocations;
 }
 
 interface IProps {
@@ -164,7 +160,7 @@ export const WeatherContainer: React.FC<IProps> = ({
             );
         } else if (searchMethod === CardType.Favourite) {
             setFilteredFavourites(
-                favouriteLocations.filter((location) =>
+                filteredFavourites.filter((location) =>
                     location.toLowerCase().includes(searchQuery.toLowerCase())
                 )
             );
@@ -298,12 +294,12 @@ export const WeatherContainer: React.FC<IProps> = ({
                             />
                         ) : (
                             <FlatList
-                                data={filteredFavourites}
+                                data={favouriteLocations}
                                 className="rounded max-h-52"
                                 renderItem={({ item }) => (
                                     <ListItem
                                         item={item}
-                                        cardType={CardType.Favourite}
+                                        cardType={CardType.Location}
                                         setOpenedCard={setOpenedCard}
                                     />
                                 )}
@@ -317,6 +313,9 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city={openedCard.name}
                         openCards={openCards}
                         setOpenCards={setOpenCards}
+                        toggleFavourites={toggleFavouriteLocation}
+                        favourites={favouriteLocations}
+                        currentOpenedCard={openedCard}
                     />
                 ) : (
                     <WeatherConditionInformation

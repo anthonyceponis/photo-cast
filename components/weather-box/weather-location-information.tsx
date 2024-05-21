@@ -43,7 +43,7 @@ interface IProps {
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
-    toggleFavourites: (name: string) => void; 
+    toggleFavourites: (name: string) => void;  // change
     favourites: string[];
     currentOpenedCard:IOpenedCard;
 }
@@ -90,7 +90,6 @@ export const WeatherLocationInformation: React.FC<IProps> = ({
     openCards,
     setOpenCards,
     toggleFavourites,
-    favourites,
     currentOpenedCard
 }) => {
     const [isFavourite, setIsFavourite] = useState(false);

@@ -38,7 +38,6 @@ export function SideNav() {
         }}>
             <Drawer.Screen name="PhotoCast" component={HomeScreen} />
             <Drawer.Screen name="Tips & Tricks" component={TipsScreen} />
-            <Drawer.Screen name="Favourites" component={FavouritesScreen} />
             <Drawer.Screen name="Settings" component={SettingsScreen} />
         </Drawer.Navigator>
         </NavigationContainer>
