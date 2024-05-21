@@ -65,7 +65,6 @@ const ListItemCity = ({
         lat = 0;
         lng = 0;
     }
-    console.log(lng);
     return (
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
@@ -155,6 +154,7 @@ export const WeatherContainer: React.FC<IProps> = ({
         useState<string[]>(favouriteLocations);
 
     useEffect(() => {
+        console.log("openedCard "+openedCard)
         if (openedCard !== null) setIsOpen(true);
     }, [openedCard]);
 

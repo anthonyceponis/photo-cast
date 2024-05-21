@@ -27,7 +27,7 @@ export const TabIcon: React.FC<{
         <FadeInView style={{}}>
         <TouchableOpacity
             key={props.tab.name}
-            onPress={() => {updateCurrentCard(props.setter, props.tab); console.log(props.tab.lat)}}
+            onPress={() => {updateCurrentCard(props.setter, props.tab)}}
             style={{
                 width: 80,
                 height: 40,

@@ -39,7 +39,6 @@ const handleDeletePress = (favorite) => {
     // use the deleteFavourite function from storage.js
     // I'm not sure whether I have to render this again so I'll have to check
     deleteFavourite(favorite.name);
-    console.log(`Deleted ${favorite.name}`);
 }
 
 const handleFavoritePress = (favorite) => {

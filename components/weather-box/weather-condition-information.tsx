@@ -105,8 +105,6 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
             case SortMethod.Distance: {
                 getNearbyLocationsWithCondition(52.2, 0.13, currentOpenedCard.name).then((data) => 
                 {
-                    console.log(data);
-                    console.log(currentOpenedCard);
                     setLocations(data);
                 }
                 );

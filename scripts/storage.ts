@@ -37,9 +37,7 @@ export async function getFavourites() : Promise<Set<string>>
 export async function storeFavourite(favourite:string)
 {
     let currentFavourites = new Set<string>(await getObj("favourites"));
-    console.log("poop");
     currentFavourites.add(favourite);
-    console.log("poop");
     storeObj("favourites", Array.from(currentFavourites));
 }
 
