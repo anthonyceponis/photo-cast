@@ -12,7 +12,7 @@ import {
     faCloudRain,
     faCloudBolt,
     faSnowflake,
-    faSmog
+    faSmog,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { TouchableOpacity, ScrollView, Text, View } from "react-native";
@@ -43,20 +43,26 @@ interface IProps {
     setOpenedCard: React.Dispatch<IOpenedCard | null>;
     openCards: IOpenedCard[];
     setOpenCards: React.Dispatch<IOpenedCard[]>;
-    toggleFavourites: (name: string) => void; 
+    toggleFavourites: (name: string) => void;
     favourites: string[];
-    currentOpenedCard:IOpenedCard;
+    currentOpenedCard: IOpenedCard;
 }
 
 const getNextSevenDaysThreeLetterCodes = () => {
     const todayIndex = new Date().getDay();
-    const dayCodes = ["SUN","MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const dayCodes = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     return [...Array(6).keys()].map((i) => dayCodes[(i + todayIndex) % 7]);
 };
 
 const getNextSevenDays = () => {
-    return [...Array(7).keys()].map((i) => moment().startOf('day').add(12,'hours').add(i, 'days').format('YYYY-MM-DD hh:mm:ss'));   
-}
+    return [...Array(7).keys()].map((i) =>
+        moment()
+            .startOf("day")
+            .add(12, "hours")
+            .add(i, "days")
+            .format("YYYY-MM-DD hh:mm:ss")
+    );
+};
 
 const dailyWeatherHighs = generateRandomIntegers(6, 0, 30);
 const dailyWeatherLows = generateRandomIntegers(6, 0, 30);
@@ -91,7 +97,7 @@ export const WeatherInformation: React.FC<IProps> = ({
     setOpenCards,
     toggleFavourites,
     favourites,
-    currentOpenedCard
+    currentOpenedCard,
 }) => {
     const [isFavourite, setIsFavourite] = useState(false);
 
@@ -100,18 +106,22 @@ export const WeatherInformation: React.FC<IProps> = ({
         setIsFavourite(!isFavourite);
     };
 
-
-    const [weatherData, setWeatherData] = useState<Map<string,IWeatherInfo>>(new Map<string,IWeatherInfo>());
+    const [weatherData, setWeatherData] = useState<Map<string, IWeatherInfo>>(
+        new Map<string, IWeatherInfo>()
+    );
     const [weatherTimestamps, setWeatherTimestamps] = useState<string[]>([]);
 
     useEffect(() => {
         getWeatherInfoByName(city).then((data) => {
             setWeatherData(data);
             let timestamps = Array.from(data.keys());
-            setWeatherTimestamps(timestamps.sort((a,b) => moment(a).valueOf()-moment(b).valueOf()));
+            setWeatherTimestamps(
+                timestamps.sort(
+                    (a, b) => moment(a).valueOf() - moment(b).valueOf()
+                )
+            );
         });
-        
-    },[]);
+    }, []);
 
     return (
         <View className="rounded p-3">
@@ -135,8 +145,8 @@ export const WeatherInformation: React.FC<IProps> = ({
                                         type: CardType.Location,
                                         name: city,
                                         filters: "",
-                                        lat:currentOpenedCard.lat,
-                                        lng:currentOpenedCard.lng
+                                        lat: currentOpenedCard.lat,
+                                        lng: currentOpenedCard.lng,
                                     },
                                 ]);
                             }}
@@ -162,17 +172,14 @@ export const WeatherInformation: React.FC<IProps> = ({
                                 );
                             }}
                         >
-                            <FontAwesomeIcon
-                                size={20}
-                                icon={faMinus}
-                            />
+                            <FontAwesomeIcon size={20} icon={faMinus} />
                         </TouchableOpacity>
                     ) : null}
-                    <Pressable
-                        className="p-2 m-1"
-                        onPress={toggleFavourite}
-                    >
-                        <FontAwesomeIcon size={20} icon={isFavourite ? faStar : faStarHalfAlt} />
+                    <Pressable className="p-2 m-1" onPress={toggleFavourite}>
+                        <FontAwesomeIcon
+                            size={20}
+                            icon={isFavourite ? faStar : faStarHalfAlt}
+                        />
                     </Pressable>
                 </View>
             </View>
@@ -183,7 +190,14 @@ export const WeatherInformation: React.FC<IProps> = ({
             >
                 {city}
             </StyledText>
-                <StyledText className="text-xl font-medium text-center mb-5"> {((weatherData.get(weatherTimestamps[0])?.temperature || 293.15)-273.15).toFixed(1)}°C</StyledText>
+            <StyledText className="text-xl font-medium text-center mb-5">
+                {" "}
+                {(
+                    (weatherData.get(weatherTimestamps[0])?.temperature ||
+                        293.15) - 273.15
+                ).toFixed(1)}
+                °C
+            </StyledText>
             <View className="mb-5 py-3 rounded bg-white">
                 <ScrollView className="mx-3" horizontal={true}>
                     <View className="flex-row">
@@ -208,20 +222,54 @@ export const WeatherInformation: React.FC<IProps> = ({
                                     >
                                         {daysOfWeekCodes[i]}
                                     </StyledText>
-                                    <FontAwesomeIcon size={20} icon={iconMap.get(weatherData.get(daysOfWeekTimestamps[i])?.icon || "01d") || faSun} />
+                                    <FontAwesomeIcon
+                                        size={20}
+                                        icon={
+                                            iconMap.get(
+                                                weatherData.get(
+                                                    daysOfWeekTimestamps[i]
+                                                )?.icon || "01d"
+                                            ) || faSun
+                                        }
+                                    />
                                     <View>
                                         <StyledText
                                             className="font-light text-center"
                                             style={{ fontSize: 17 }}
                                         >
-                                            {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
-                                            ((weatherData.get(daysOfWeekTimestamps[i])?.temperature || 293.15)-273.15).toFixed(1):
-                                            i==0 ? ((weatherData.get(weatherTimestamps[0])?.temperature || 293.15)-273.15).toFixed(1):"N/A"}°
+                                            {weatherData.get(
+                                                daysOfWeekTimestamps[i]
+                                            ) != undefined
+                                                ? (
+                                                      (weatherData.get(
+                                                          daysOfWeekTimestamps[
+                                                              i
+                                                          ]
+                                                      )?.temperature ||
+                                                          293.15) - 273.15
+                                                  ).toFixed(1)
+                                                : i == 0
+                                                ? (
+                                                      (weatherData.get(
+                                                          weatherTimestamps[0]
+                                                      )?.temperature ||
+                                                          293.15) - 273.15
+                                                  ).toFixed(1)
+                                                : "N/A"}
+                                            °
                                         </StyledText>
                                         <StyledText className="font-medium text-xs text-gray-400 text-center">
-                                            {weatherData.get(daysOfWeekTimestamps[i]) != undefined ?
-                                            (weatherData.get(daysOfWeekTimestamps[i])?.mainDesc):
-                                            i==0 ? (weatherData.get(weatherTimestamps[0])?.mainDesc):"N/A"}
+                                            {weatherData.get(
+                                                daysOfWeekTimestamps[i]
+                                            ) != undefined
+                                                ? weatherData.get(
+                                                      daysOfWeekTimestamps[i]
+                                                  )?.mainDesc
+                                                : i == 0
+                                                ? weatherData.get(
+                                                      weatherTimestamps[0]
+                                                  )?.mainDesc
+                                                : "N/A"}
                                         </StyledText>
                                     </View>
                                 </View>

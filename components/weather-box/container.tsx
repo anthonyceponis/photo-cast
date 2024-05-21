@@ -43,7 +43,7 @@ const allWeatherConditions = [
 const ListItemCity = ({
     itemIn,
     cardType,
-    setOpenedCard
+    setOpenedCard,
 }: {
     itemIn: String;
     cardType: CardType;
@@ -53,20 +53,25 @@ const ListItemCity = ({
     var latlng = getListedLocationCoords(String(itemIn));
     var lat = 0;
     var lng = 0;
-    if(latlng != null)
-    {
+    if (latlng != null) {
         lat = parseFloat(latlng[0]);
         lng = parseFloat(latlng[1]);
-    }else{
+    } else {
         lat = 0;
         lng = 0;
     }
-    console.log(lng)
+    console.log(lng);
     return (
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
             onPress={() => {
-                setOpenedCard({ type: cardType, name: String(itemIn), filters: "", lat:lat, lng:lng });
+                setOpenedCard({
+                    type: cardType,
+                    name: String(itemIn),
+                    filters: "",
+                    lat: lat,
+                    lng: lng,
+                });
             }}
         >
             <StyledText>{itemIn}</StyledText>
@@ -77,18 +82,23 @@ const ListItemCity = ({
 const ListItem = ({
     item,
     cardType,
-    setOpenedCard
+    setOpenedCard,
 }: {
     item: string;
     cardType: CardType;
     setOpenedCard: React.Dispatch<IOpenedCard>;
 }) => {
-    
     return (
         <TouchableOpacity
             className="bg-white text-black p-3 border-b border-gray-200"
             onPress={() => {
-                setOpenedCard({ type: cardType, name: item, filters: "", lat:0, lng:0 });
+                setOpenedCard({
+                    type: cardType,
+                    name: item,
+                    filters: "",
+                    lat: 0,
+                    lng: 0,
+                });
             }}
         >
             <StyledText>{item}</StyledText>
@@ -96,10 +106,7 @@ const ListItem = ({
     );
 };
 
-let favouriteLocations = [
-    "Cambridge",
-    "London",
-];
+let favouriteLocations = ["Cambridge", "London"];
 
 function toggleFavouriteLocation(location: string): string[] {
     const locationIndex = favouriteLocations.indexOf(location);
@@ -108,7 +115,9 @@ function toggleFavouriteLocation(location: string): string[] {
         favouriteLocations = [...favouriteLocations, location];
     } else {
         // If location is in the list, remove it
-        favouriteLocations = favouriteLocations.filter(loc => loc !== location);
+        favouriteLocations = favouriteLocations.filter(
+            (loc) => loc !== location
+        );
     }
     return favouriteLocations;
 }
@@ -140,7 +149,8 @@ export const WeatherContainer: React.FC<IProps> = ({
     //console.log("Cities:" + String(cityData[0].city));
     const [weatherConditionList, setWeatherConditionList] =
         useState(allWeatherConditions);
-    const [filteredFavourites, setFilteredFavourites] = useState<string[]>(favouriteLocations);
+    const [filteredFavourites, setFilteredFavourites] =
+        useState<string[]>(favouriteLocations);
 
     useEffect(() => {
         if (openedCard !== null) setIsOpen(true);
@@ -193,8 +203,11 @@ export const WeatherContainer: React.FC<IProps> = ({
                     <View className="rounded p-3">
                         <TouchableOpacity
                             className="text-right flex-row justify-end"
-                            onPress={() => {setIsOpen(false); Keyboard.dismiss()}}
-                        > 
+                            onPress={() => {
+                                setIsOpen(false);
+                                Keyboard.dismiss();
+                            }}
+                        >
                             <FontAwesomeIcon size={25} icon={faXmark} />
                         </TouchableOpacity>
                         <StyledText className="font-semibold mb-2">
@@ -317,6 +330,9 @@ export const WeatherContainer: React.FC<IProps> = ({
                         city={openedCard.name}
                         openCards={openCards}
                         setOpenCards={setOpenCards}
+                        toggleFavourites={toggleFavouriteLocation}
+                        favourites={favouriteLocations}
+                        currentOpenedCard={openedCard}
                     />
                 ) : (
                     <WeatherConditionInformation
@@ -333,4 +349,3 @@ export const WeatherContainer: React.FC<IProps> = ({
         </View>
     );
 };
-
