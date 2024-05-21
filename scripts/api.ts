@@ -168,9 +168,13 @@ export const getNearbyLocationsWithCondition = async (lat: number, lng: number, 
     const meetingConditions = [];
     for (let i = 0; i < 5; i++) {
         const curCondition = await fetchMainDescription(`https://api.openweathermap.org/data/2.5/weather?q=${nearLocations[i].city}&appid=${apiKey}`);
-        // console.log(curCondition);
+        console.log(curCondition);
         if (curCondition == condition) {
-            meetingConditions.push(nearLocations[i])
+            meetingConditions.push(
+                {name: String(nearLocations[i].city), 
+                distance: Math.round(Math.sqrt(Math.pow((lat - parseFloat(String(nearLocations[i].lat))) * 110.5, 2) + Math.pow((lng - parseFloat(String(nearLocations[i].lng))) * 111.5 * Math.cos(lat), 2))),
+                time: new Date()}
+            )
             // console.log(nearLocations[i].city)
         }
     }

@@ -36,8 +36,13 @@ const allWeatherConditions = [
     "Sunset",
     "Golden morning",
     "Golden evening",
-    "Rainy",
-    "Cloudy",
+    "Rain",
+    "Clouds",
+    "Mist",
+    "Snow",
+    "Drizzle",
+    "Thunderstorm",
+    "Clear"
 ];
 
 const ListItemCity = ({
