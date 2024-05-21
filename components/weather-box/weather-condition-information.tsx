@@ -10,6 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
+import { getLocationByCoords, getNearbyLocationsWithCondition } from "../../scripts/api";
+import { ICity } from "./container";
 
 function generateRandomIntegers(
     count: number,
@@ -50,8 +52,8 @@ interface ILocations {
     time: Date;
 }
 
-const locationsDefault: ILocations[] = [
-    { name: "Cambridge", distance: 1, time: new Date() },
+var locationsDefault: ILocations[] = [
+    { name: " ", distance: 0, time: new Date() },
 ];
 
 const styles = StyleSheet.create({
@@ -92,6 +94,7 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
     favourites,
     currentOpenedCard
 }) => {
+
     const [locations, setLocations] = useState<ILocations[]>(locationsDefault);
     const [sortMethod, setSortMethod] = useState<SortMethod>(
         SortMethod.Distance
@@ -100,10 +103,12 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
     useEffect(() => {
         switch (sortMethod) {
             case SortMethod.Distance: {
-                setLocations(
-                    locations.sort(
-                        (loc1, loc2) => loc1.distance - loc2.distance
-                    )
+                getNearbyLocationsWithCondition(52.2, 0.13, currentOpenedCard.name).then((data) => 
+                {
+                    console.log(data);
+                    console.log(currentOpenedCard);
+                    setLocations(data);
+                }
                 );
             }
             case SortMethod.Soonest: {
@@ -316,7 +321,7 @@ export const WeatherConditionInformation: React.FC<IProps> = ({
             <View style={styles.container}>
                 <View style={styles.row}>
                     <StyledText style={styles.headerCell}>Name</StyledText>
-                    <StyledText style={styles.headerCell}>Distance</StyledText>
+                    <StyledText style={styles.headerCell}>Distance (km) </StyledText>
                     <StyledText style={styles.headerCell}>Time</StyledText>
                 </View>
                 <FlatList
